@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lockpick Mini Game</title>
+<style>
+  canvas {
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<canvas id="lockpickCanvas" width="400" height="300"></canvas>
+
+<script>
+const canvas = document.getElementById('lockpickCanvas');
+const ctx = canvas.getContext('2d');
+
+const partHeight = 60;
+const lockHeight = 200;
+
+function generateRandomSweetSpot() {
+  return Math.floor(Math.random() * (lockHeight - partHeight));
+}
+
+// Initial state with random sweet spots
+let lockParts = [
+  { position: 50, correct: false, y: 0, sweetSpot: generateRandomSweetSpot() },
+  { position: 150, correct: false, y: 0, sweetSpot: generateRandomSweetSpot() },
+  { position: 250, correct: false, y: 0, sweetSpot: generateRandomSweetSpot() },
+  { position: 350, correct: false, y: 0, sweetSpot: generateRandomSweetSpot() }
+];
+
+let currentPart = 0;
+
+function drawLock() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  lockParts.forEach(part => {
+    ctx.fillStyle = part.correct ? 'green' : 'brown';
+    ctx.fillRect(part.position, lockHeight - part.y, 20, partHeight);
+  });
+}
+
+function moveLockPart(partIndex, direction) {
+  if (lockParts[partIndex].correct) return;
+
+  const speed = 5;
+
+  lockParts[partIndex].y += direction * speed;
+
+  if (lockParts[partIndex].y < 0) lockParts[partIndex].y = 0;
+
+  if (lockParts[partIndex].y > lockHeight - partHeight) lockParts[partIndex].y = lockHeight - partHeight;
+  
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowUp') {
+    moveLockPart(currentPart, -1);
+  } else if (e.key === 'ArrowDown') {
+    moveLockPart(currentPart, 1);
+  } else if (e.key === 'e') {
+    if (Math.abs(lockParts[currentPart].y - lockParts[currentPart].sweetSpot) < 5) {
+      lockParts[currentPart].y = lockParts[currentPart].sweetSpot;
+      lockParts[currentPart].correct = true;
+      currentPart++;
+    }
+  }
+  drawLock();
+});
+
+drawLock();
+</script>
+</body>
+</html>
