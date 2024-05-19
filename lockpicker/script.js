@@ -46,6 +46,20 @@ function resetPosition() {
     isRotating = false; // Zastavíme rotaci po neúspěchu
 }
 
+// Přidáme funkci pro resetování skóre
+function resetScore() {
+    points = 0;
+    document.getElementById('score').innerText = points;
+}
+
+// Přidáme event listener pro klávesu "R"
+document.body.addEventListener('keydown', (e) => {
+    if (e.code === 'KeyR') {
+        resetGame(); // Resetuje hru
+        resetScore(); // Resetuje skóre
+    }
+});
+
 const img = new Image();
 img.src = 'wheel.png';
 
@@ -71,9 +85,7 @@ function drawLock() {
     lockCtx.restore();
 
     // Vykreslení skóre
-    lockCtx.font = '40px Arial';
-    lockCtx.fillStyle = 'white';
-    lockCtx.fillText('Score: ' + points, 20, 50);
+    document.getElementById('score').innerText = points;
 
     // Vykreslení vlastního kurzoru
     drawCustomCursor(cursorX, cursorY, isInSweetSpot ? 'green' : 'red');
@@ -159,10 +171,10 @@ function update() {
             resetGame(); // Reset hry po úspěšném lockpicknutí
         }
     } else {
-        if (!isInSweetSpot && lastTimeInSweetSpot && Date.now() - lastTimeInSweetSpot >= 1000) { // 1 sekunda mimo sweet spot
-            startTime = null; // Reset time if not in sweet spot for 1 second
-            lastTimeInSweetSpot = null; // Reset the last time in sweet spot
-            resetPosition(); // Reset rotace a sladkého místa po neúspěchu
+        if (!isInSweetSpot && lastTimeInSweetSpot && Date.now() - lastTimeInSweetSpot >= 200) { 
+            startTime = null; 
+            lastTimeInSweetSpot = null; 
+            resetPosition(); 
         }
     }
     drawLock();
@@ -172,6 +184,9 @@ function update() {
 document.body.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         isRotating = true;
+    } else if (e.code === 'KeyR') {
+        resetGame(); // Resetuje hru
+        resetScore(); // Resetuje skóre
     }
 });
 
