@@ -6,7 +6,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh; /* Ensures it takes at least the full viewport height */
+    min-height: 100vh; 
 }
 
 header {
@@ -24,39 +24,48 @@ header {
 }
 
 .sign-in {
-    font-size: 18px;
+    color: white;
+    font-size: 30px;
     position: absolute;
     right: 50px;
     top: 20px;
+    text-decoration: none;
 }
-
+.back {
+    color: white;
+    font-size: 30px;
+    position: absolute;
+    left: 50px;
+    top: 20px;
+    text-decoration: none;
+}
 main {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Stack header and cards */
+    flex-direction: column; 
     flex-grow: 1;
     width: 100%;
 }
 
 .cards {
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping to the next line */
+    flex-wrap: wrap; 
     gap: 40px;
-    justify-content: center-start; /* Center align the cards */
-    max-width: 1300px; /* Width to fit three cards and the gaps */
-    margin-top: 20px; /* Add some spacing from the header */
+    justify-content: center-start; 
+    max-width: 1300px; 
+    margin-top: 20px; 
 }
 
 .card {
-    width: 400px; /* Ensure consistent width */
-    height: 300px; /* Ensure consistent height */
+    width: 400px; 
+    height: 300px;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    transition: transform 0.3s;
-    flex-shrink: 0; /* Prevent shrinking */
+    transition: transform 0.3s, background-image 0.3s;
+    flex-shrink: 0; 
 }
 
 .card a {
@@ -83,10 +92,15 @@ main {
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
+/* Minigamer Page Styles */
 #lockpicking {
     background-image: url('lockpicking.png');
     background-size: cover;
     background-position: center;
+}
+
+#lockpicking:hover {
+    background-image: url('medievalgif.gif'); 
 }
 
 #hacking {
@@ -95,22 +109,23 @@ main {
     background-position: center;
 }
 
+#hacking:hover {
+    background-image: url('hacking.gif'); 
+}
+
 #fishing {
     background-image: url('fishing.png');
     background-size: cover;
     background-position: center;
 }
 
-#random {
-    background-image: url('random.png');
-    background-size: cover;
-    background-position: center;
+#fishing:hover {
+    background-image: url('fishing.gif'); 
 }
 
 #lockpicking::before,
 #hacking::before,
-#fishing::before,
-#random::before {
+#fishing::before {
     content: '';
     position: absolute;
     top: 0;
@@ -133,8 +148,60 @@ main {
     background: linear-gradient(to top right, rgba(0, 255, 255, 0.5) 0%, rgba(0, 127, 255, 0.5) 1%, transparent 35%);
 }
 
+/* Lockpicker Page Styles */
+#medieval {
+    background-image: url('medieval.png');
+    background-size: cover;
+    background-position: center;
+}
+
+#medieval:hover {
+    background-image: url('medieval.gif'); 
+}
+
+#mafia {
+    background-image: url('mafia.png');
+    background-size: cover;
+    background-position: center;
+}
+
+#mafia:hover {
+    background-image: url('mafia.gif'); 
+}
+
+#wasteland {
+    background-image: url('wasteland.png');
+    background-size: cover;
+    background-position: center;
+}
+
+#wasteland:hover {
+    background-image: url('wasteland.gif'); 
+}
+
+#random {
+    background-image: url('random.png');
+    background-size: cover;
+    background-position: center;
+}
+
+#random:hover {
+    background-image: url('random.gif'); 
+}
+
+#medieval::before,
+#mafia::before,
+#wasteland::before,
 #random::before {
-    background: linear-gradient(to top right, rgba(255, 0, 255, 0.5) 0%, rgba(127, 0, 255, 0.5) 1%, transparent 35%);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 200% 200%;
+    z-index: 1;
+    background: linear-gradient(to top right, rgba(255, 255, 0, 0.5) 0%, rgba(255, 165, 0, 0.5) 1%, transparent 35%);
 }
 
 .card:hover {
