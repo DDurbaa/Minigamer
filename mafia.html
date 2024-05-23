@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Hra</title>
+  <style>
+    body {
+      height: 100vh;
+      background-color: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      flex-direction: column;
+      color: #ffffff;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .lock-container {
+      display: flex;
+      background-color: #8B7356;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .lock {
+      width: 50px;
+      height: 200px;
+      margin: 0 10px;
+      background-color: #2A2318;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      border-radius: 5px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .pin {
+      width: 100%;
+      height: 20px;
+      background-color: #705d47;
+      position: absolute;
+      bottom: 0;
+      transition: bottom 0.1s;
+      border-radius: 3px;
+    }
+
+    .green {
+      background-color: green !important;
+    }
+
+    .score {
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <span id="score" class="score">Score: 0</span>
+    <div class="lock-container">
+      <div class="lock" id="lock1">
+        <div class="pin"></div>
+      </div>
+      <div class="lock" id="lock2">
+        <div class="pin"></div>
+      </div>
+      <div class="lock" id="lock3">
+        <div class="pin"></div>
+      </div>
+      <div class="lock" id="lock4">
+        <div class="pin"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let score = 0;
+    const locks = document.querySelectorAll('.lock');
+    let currentLockIndex = 0;
+    let positions = [0, 0, 0, 0];
+    let sweetSpots = [];
+
+    function generateSweetSpots() {
+      for (let i = 0; i < locks.length; i++) {
+        sweetSpots.push(Math.floor(Math.random() * 161) + 20); // 20 - 180
+      }
+    }
+
+    generateSweetSpots();
+
+    document.addEventListener('keydown', (e) => {
+      const currentLock = locks[currentLockIndex];
+      const pin = currentLock.querySelector('.pin');
+      let currentPosition = positions[currentLockIndex];
+
+      if (e.key === 'ArrowUp') {
+        if (currentPosition < 180) {
+          currentPosition += 10;
+          positions[currentLockIndex] = currentPosition;
+          pin.style.bottom = `${currentPosition}px`;
+          checkSweetSpot(currentLockIndex, currentPosition, pin);
+        }
+      } else if (e.key === 'ArrowDown') {
+        if (currentPosition > 0) {
+          currentPosition -= 10;
+          positions[currentLockIndex] = currentPosition;
+          pin.style.bottom = `${currentPosition}px`;
+          checkSweetSpot(currentLockIndex, currentPosition, pin);
+        }
+      } else if (e.key === 'e') {
+        if (positions[currentLockIndex] === sweetSpots[currentLockIndex]) {
+          pin.classList.add('green');
+          currentLockIndex++;
+          if (currentLockIndex >= locks.length) {
+            score++;
+            document.getElementById("score").innerHTML = "Score: " + score;
+            resetLocks();
+          }
+        } else {
+          if (currentLockIndex > 0) {
+            currentLockIndex--;
+            positions[currentLockIndex] = 0;
+            locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
+          }
+        }
+      }
+    });
+
+    function checkSweetSpot(index, position, pin) {
+      if (position === sweetSpots[index]) {
+        pin.classList.add('green');
+      } else {
+        pin.classList.remove('green');
+      }
+    }
+
+    function resetLocks() {
+      currentLockIndex = 0;
+      positions = [0, 0, 0, 0];
+      sweetSpots = [];
+      generateSweetSpots();
+      locks.forEach(lock => {
+        const pin = lock.querySelector('.pin');
+        pin.classList.remove('green');
+        pin.style.bottom = '0px';
+      });
+    }
+
+    function movePinsDown() {
+      locks.forEach((lock, index) => {
+        if (index > currentLockIndex) return;
+        const pin = lock.querySelector('.pin');
+        let currentPosition = positions[index];
+
+        if (currentPosition > 0 && currentPosition !== sweetSpots[index]) {
+          currentPosition -= 1;
+          positions[index] = currentPosition;
+          pin.style.bottom = `${currentPosition}px`;
+          checkSweetSpot(index, currentPosition, pin);
+        }
+      });
+    }
+
+    // Soupne se dolu kazdych 50ms
+    setInterval(movePinsDown, 50);
+  </script>
+</body>
+
+</html>
