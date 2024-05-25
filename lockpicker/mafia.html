@@ -90,6 +90,7 @@
     let currentLockIndex = 0;
     let positions = [0, 0, 0, 0];
     let sweetSpots = [];
+    const tolerance = 5; // Tolerance for sweet spot
 
     function generateSweetSpots() {
       for (let i = 0; i < locks.length; i++) {
@@ -119,7 +120,7 @@
           checkSweetSpot(currentLockIndex, currentPosition, pin);
         }
       } else if (e.key === 'e') {
-        if (positions[currentLockIndex] === sweetSpots[currentLockIndex]) {
+        if (Math.abs(positions[currentLockIndex] - sweetSpots[currentLockIndex]) <= tolerance) {
           pin.classList.add('green');
           currentLockIndex++;
           if (currentLockIndex >= locks.length) {
@@ -129,6 +130,8 @@
           }
         } else {
           if (currentLockIndex > 0) {
+            positions[currentLockIndex] = 0;
+            locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
             currentLockIndex--;
             positions[currentLockIndex] = 0;
             locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
@@ -138,7 +141,7 @@
     });
 
     function checkSweetSpot(index, position, pin) {
-      if (position === sweetSpots[index]) {
+      if (Math.abs(position - sweetSpots[index]) <= tolerance) {
         pin.classList.add('green');
       } else {
         pin.classList.remove('green');
@@ -158,18 +161,15 @@
     }
 
     function movePinsDown() {
-      locks.forEach((lock, index) => {
-        if (index > currentLockIndex) return;
-        const pin = lock.querySelector('.pin');
-        let currentPosition = positions[index];
+      const pin = locks[currentLockIndex].querySelector('.pin');
+      let currentPosition = positions[currentLockIndex];
 
-        if (currentPosition > 0 && currentPosition !== sweetSpots[index]) {
-          currentPosition -= 1;
-          positions[index] = currentPosition;
-          pin.style.bottom = `${currentPosition}px`;
-          checkSweetSpot(index, currentPosition, pin);
-        }
-      });
+      if (currentPosition > 0 ) {
+        currentPosition -= 1;
+        positions[currentLockIndex] = currentPosition;
+        pin.style.bottom = `${currentPosition}px`;
+        checkSweetSpot(currentLockIndex, currentPosition, pin);
+      }
     }
 
     // Soupne se dolu kazdych 50ms
