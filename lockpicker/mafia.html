@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="cs">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Hra</title>
+  <title>Mafia Endless</title>
   <style>
     body {
       height: 100vh;
@@ -63,6 +62,26 @@
       font-size: 24px;
       font-weight: bold;
     }
+    #tooltip {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      color: white;
+      font-size: 26px;
+      text-align: right;
+    }
+
+    .tooltip-item {
+      margin: 5px 0;
+    }
+
+    .tooltip-key {
+      background-color: #444;
+      border-radius: 3px;
+      padding: 4px 8px;
+      display: inline-block;
+      margin-left: 10px;
+    }
   </style>
 </head>
 
@@ -79,22 +98,24 @@
       <div class="lock" id="lock3">
         <div class="pin"></div>
       </div>
-      <div class="lock" id="lock4">
-        <div class="pin"></div>
-      </div>
     </div>
+  </div>
+  <div id="tooltip">
+    <div class="tooltip-item">Restart: <span class="tooltip-key">R</span></div>
+    <div class="tooltip-item">Lock-in: <span class="tooltip-key">E</span></div>
+    <div class="tooltip-item">Move pin: <span class="tooltip-key">Up/Down Arrow</span></div>
   </div>
   <script>
     let score = 0;
     const locks = document.querySelectorAll('.lock');
     let currentLockIndex = 0;
-    let positions = [0, 0, 0, 0];
+    let positions = [0, 0, 0];
     let sweetSpots = [];
-    const tolerance = 5; // Tolerance for sweet spot
+    const tolerance = 5; // Tolerance na sweet spoty
 
     function generateSweetSpots() {
       for (let i = 0; i < locks.length; i++) {
-        sweetSpots.push(Math.floor(Math.random() * 161) + 20); // 20 - 180
+        sweetSpots.push(Math.floor(Math.random() * 161) + 20); // 20 - 180 rozmezí
       }
     }
 
@@ -135,6 +156,7 @@
             currentLockIndex--;
             positions[currentLockIndex] = 0;
             locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
+            locks[currentLockIndex].querySelector('.pin').classList.remove('green');
           }
         }
       }
@@ -150,7 +172,7 @@
 
     function resetLocks() {
       currentLockIndex = 0;
-      positions = [0, 0, 0, 0];
+      positions = [0, 0, 0];
       sweetSpots = [];
       generateSweetSpots();
       locks.forEach(lock => {
@@ -174,6 +196,7 @@
 
     // Soupne se dolu kazdych 50ms
     setInterval(movePinsDown, 50);
+
   </script>
 </body>
 
