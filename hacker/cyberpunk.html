@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Hacking Mini-Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #0f0f0f;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .container {
+            display: grid;
+            grid-template-areas:
+                "matrix buffer"
+                "sequence buffer";
+            gap: 20px;
+        }
+
+        .code-matrix {
+            grid-area: matrix;
+            display: grid;
+            grid-template-columns: repeat(4, 50px);
+            gap: 5px;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .buffer {
+            grid-area: buffer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .buffer-cell {
+            width: 50px;
+            height: 50px;
+            background-color: #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sequence {
+            grid-area: sequence;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sequence-required {
+            background-color: #222;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="code-matrix">
+            <div class="cell" data-value="BD">BD</div>
+            <div class="cell" data-value="E9">E9</div>
+            <div class="cell" data-value="1C">1C</div>
+            <div class="cell" data-value="BD">BD</div>
+            <div class="cell" data-value="1C">1C</div>
+            <div class="cell" data-value="BD">BD</div>
+            <div class="cell" data-value="55">55</div>
+            <div class="cell" data-value="BD">BD</div>
+            <div class="cell" data-value="BD">BD</div>
+            <div class="cell" data-value="55">55</div>
+            <div class="cell" data-value="BD">BD</div>
+            <div class="cell" data-value="55">55</div>
+            <div class="cell" data-value="1C">1C</div>
+            <div class="cell" data-value="55">55</div>
+            <div class="cell" data-value="55">55</div>
+            <div class="cell" data-value="E9">E9</div>
+        </div>
+        <div class="buffer">
+            <div class="buffer-cell"></div>
+            <div class="buffer-cell"></div>
+            <div class="buffer-cell"></div>
+            <div class="buffer-cell"></div>
+        </div>
+        <div class="sequence">
+            <div class="sequence-required">55 1C</div>
+            <div class="sequence-required">1C E9 BD</div>
+            <div class="sequence-required">BD BD 55</div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cells = document.querySelectorAll('.cell');
+            const bufferCells = document.querySelectorAll('.buffer-cell');
+            let bufferIndex = 0;
+
+            cells.forEach(cell => {
+                cell.addEventListener('click', () => {
+                    if (bufferIndex < bufferCells.length) {
+                        bufferCells[bufferIndex].innerText = cell.dataset.value;
+                        bufferIndex++;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
