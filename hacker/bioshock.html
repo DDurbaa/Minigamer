@@ -28,7 +28,7 @@
         #pointer {
             position: absolute;
             float: right;
-            width: 10px;
+            width: 5px;
             height: 50px;
             background-color: yellow;
         }
@@ -64,11 +64,6 @@
             margin-bottom: 20px;
         }
 
-        #restart {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -169,7 +164,7 @@
             const gameWidth = document.getElementById('game').offsetWidth;
             const pointerWidth = pointer.offsetWidth;
             let left = parseFloat(pointer.style.left || '50%');
-            left += direction * 10; // Adjust the speed of movement here
+            left += direction * 7; // Adjust the speed of movement here
             if (left <= 0) {
                 left = 0;
                 direction = 1;
