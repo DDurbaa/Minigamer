@@ -1,4 +1,8 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
 
 class Signup 
 {
@@ -112,17 +116,35 @@ class Signup
         $this->sendVerificationEmail($data['email'], $token);
     }
 
-    private function sendVerificationEmail($email, $token) {
-        $subject = 'Minigamer - Email Verification';
-        $message = 'Click the link to verify your email: <a href="http://localhost/yourproject/verify-email.php?token=' . $token . '">Verify Email</a>';
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $headers .= 'From: svarcs.05@gmail.com' . "\r\n";
+    private function sendVerificationEmail($email, $token) {     
     
-        if(mail($email, $subject, $message, $headers)) {
+        // Vytvoř nový objekt PHPMailer
+        $mail = new PHPMailer(true);
+    
+        try {
+            // Nastavení serveru
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'simonecek2005@gmail.com'; // EMAIL ODESILATELE
+            $mail->Password = 'tjyjwahhqikfijmd'; // HESLO (HESLO APLIKACE KDYZ 2FA)
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+    
+            // Nastavení odesílatele a příjemce
+            $mail->setFrom('simonecek2005@gmail.com', 'Minigamer'); 
+            $mail->addAddress($email); 
+            $mail->Subject = 'Minigamer - Email Verification';
+            
+            // Tělo zprávy v HTML formátu
+            $mail->isHTML(true);
+            $mail->Body = 'Click the link to verify your email: <a href="http://localhost/Minigamer/Lockpicker/verify-email.php?t=' . $token . '">Verify Email</a>';
+    
+            // Odeslání e-mailu
+            $mail->send();
             echo 'Verification email has been sent';
-        } else {
-            echo 'Failed to send verification email';
+        } catch (Exception $e) {
+            echo 'Failed to send verification email. Error: ' . $mail->ErrorInfo;
         }
     }
 
@@ -167,4 +189,3 @@ class Signup
     }
 }
 
-?>
