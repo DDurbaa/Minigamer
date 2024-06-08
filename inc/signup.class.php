@@ -109,6 +109,7 @@ class Signup
         $token = bin2hex(random_bytes(50));
 
         $DB->query("INSERT INTO users (username, email, password, token, verified, created_at) VALUES (?, ?, ?, ?, 0, NOW())", $username, $email, $password, $token);
+        $this->sendVerificationEmail($data['email'], $token);
     }
 
     private function sendVerificationEmail($email, $token) {
