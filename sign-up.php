@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign-Up Now!</title>
+    <title>Sign Up Now!</title>
 </head>
 <body>
     <form action="" method="POST">
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <label for="passwordTwo">Confirm password:</label>
         <input type="password" id="passwordTwo" name="passwordTwo" required><br>
         
-        <input type="submit" value="Sign-up">
+        <input type="submit" value="Sign up">
     </form>
 </body>
 </html>
