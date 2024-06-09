@@ -12,11 +12,11 @@ if (isset($_GET['t']))
     if ($DB->numRows() > 0) 
     {
         $DB->query("UPDATE users SET verified = 1 WHERE token = ?", $token);
-        echo "Email verified successfully!";
+        $msg =  "Email verified successfully!";
     } 
     else 
     {
-        echo "Invalid token!";
+        $msg = "Invalid token!";
     }
 } 
 else 
@@ -32,6 +32,13 @@ else
     <title>Email Verification</title>
 </head>
 <body>
+
+    <?php 
+        if ($msg != "")
+        {
+            echo $msg;
+        }
+    ?>
     
 </body>
 </html>

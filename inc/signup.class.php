@@ -113,10 +113,10 @@ class Signup
         $token = bin2hex(random_bytes(50));
 
         $DB->query("INSERT INTO users (username, email, password, token, verified, created_at) VALUES (?, ?, ?, ?, 0, NOW())", $username, $email, $password, $token);
-        $this->sendVerificationEmail($data['email'], $token);
+        $this->sendVerificationEmail($data['email'], $token, $data['username']);
     }
 
-    private function sendVerificationEmail($email, $token) {     
+    private function sendVerificationEmail($email, $token, $username) {     
     
         // Vytvoř nový objekt PHPMailer
         $mail = new PHPMailer(true);
@@ -138,7 +138,7 @@ class Signup
             
             // Tělo zprávy v HTML formátu
             $mail->isHTML(true);
-            $mail->Body = 'Click the link to verify your email: <a href="http://localhost/Minigamer/Lockpicker/verify-email.php?t=' . $token . '">Verify Email</a>';
+            $mail->Body = 'Welcome to Minigamer, ' . $username . '! <br> Click the link below to verify your email!: <br> <a href="http://localhost/Minigamer/Lockpicker/verify-email.php?t=' . $token . '">Verify Email</a>';
     
             // Odeslání e-mailu
             $mail->send();
