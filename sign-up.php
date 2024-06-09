@@ -1,5 +1,5 @@
 <?php
-// Include the necessary classes
+
 include "inc/loader.php";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
