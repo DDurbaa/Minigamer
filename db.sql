@@ -9,6 +9,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     token VARCHAR(100) NOT NULL,
     verified TINYINT(1) DEFAULT 0,
+    remember_me_token VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -1,3 +1,22 @@
+<?php 
+
+    include "inc/loader.php";
+
+    $msg = "";
+
+    if ($_SERVER['REQUEST_METHOD'] == "POST")
+    {
+        $Login = new Login();
+        $msg = $Login->Evaluate($_POST);
+
+        if ($msg != "") echo $msg;
+        else 
+        {
+            print_r($_SESSION);
+        }
+    }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,15 +25,13 @@
     <title>Sign In Now!</title>
 </head>
 <body>
-    <form action="" method="POST">
-        
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required><br>
-        
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
-        
-        <input type="submit" value="Sign in">
-    </form>
+<form action="" method="post">
+    <input type="email" name="email" required placeholder="Email">
+    <input type="password" name="password" required placeholder="Password">
+    <label>
+        <input type="checkbox" name="remember_me"> Remember Me
+    </label>
+    <input type="submit" value="Login">
+</form>
 </body>
 </html>
