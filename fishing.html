@@ -1,34 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stardew Fishing</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fisher</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="fishing" data-reelpower="10" data-baitweight="1" data-progress="2" data-progresspenalty="3" data-progressupdaterate="200">
-    <div class="rod">
-      <div class="reel">
-        <div class="handle"></div>
-      </div>
-    </div>
-    <div class="sea">
-      <div class="area">
-        <div class="bait" id="bait"></div>
-        <div class="fish" data-movepremsec="1500" data-jumprange="100" data-speed="1000" data-depth="20">
-          <i class="fas fa-fish"></i>
+    <header>
+        <a href="index.html" class="buttonexit">EXIT</a>
+        <div class="logo">FISHING</div>
+        <a href="#" class="buttonsigninfishing">SIGN IN</a>
+    </header>
+    <main>
+        <div class="cards">
+            <div class="card" id="valley">
+                <a href="fishing/valleymenu.html">
+                    <div class="card-content">
+                        <h2>VALLEY</h2>
+                    </div>
+                </a>
+            </div>
+            <div class="card" id="valley">
+                <a href="#">
+                    <div class="card-content">
+                        <h2>???</h2>
+                    </div>
+                </a>
+            </div>
+            <div class="card" id="valley">
+                <a href="#">
+                    <div class="card-content">
+                        <h2>???</h2>
+                    </div>
+                </a>
+            </div>
+            <div class="card" id="randomfishing">
+                <a href="#">
+                    <div class="card-content">
+                        <h2>RANDOM</h2>
+                    </div>
+                </a>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="progress">
-      <div class="area">
-        <div class="bar" style="height:0%"></div>
-      </div>
-    </div>
-  </div>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="script.js"></script>
+    </main>
 </body>
 </html>
