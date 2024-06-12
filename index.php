@@ -17,6 +17,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="mlogo.png">
     <title>Minigamer</title>
     <link rel="stylesheet" href="styles.css">
 </head>

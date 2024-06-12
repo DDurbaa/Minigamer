@@ -17,12 +17,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="mlogo.png">
     <title>Fisher</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <a href="index.html" class="buttonexit">EXIT</a>
+        <a href="index.php" class="buttonexit">EXIT</a>
         <div class="logo">FISHING</div>
         <a href="#" class="buttonsigninfishing">SIGN IN</a>
     </header>
