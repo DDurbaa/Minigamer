@@ -158,7 +158,7 @@
 </head>
 
 <body>
-    <a href="cyberpunkmenu.html" class="buttonexit">EXIT</a>
+    <a href="cyberpunkmenu.php" class="buttonexit">EXIT</a>
     <div class="container">
         <div class="code-matrix">
             <!-- Místa pro buňky s kódy -->

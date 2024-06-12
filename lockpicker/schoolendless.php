@@ -143,7 +143,7 @@
   </style>
 </head>
 <body>
-  <a href="medievalmenu.html" class="buttonexit">EXIT</a>
+  <a href="medievalmenu.php" class="buttonexit">EXIT</a>
   <div id="game-container">
     <div id="lock" style="transform: translate(-50%, -50%)">
       <div id="dial">

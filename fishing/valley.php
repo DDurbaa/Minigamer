@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <a href="valleymenu.html" class="buttonexit">EXIT</a>
+  <a href="valleymenu.php" class="buttonexit">EXIT</a>
   <div class="fishing" data-reelpower="10" data-baitweight="1" data-progress="2" data-progresspenalty="3" data-progressupdaterate="200">
     <div class="rod">
       <div class="reel">

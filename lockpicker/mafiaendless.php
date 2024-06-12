@@ -40,10 +40,11 @@
 
     .lock-container {
       display: flex;
-      background-color: #8B7356;
+      background-color: #ffb800;
       padding: 25px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      position: relative;
     }
 
     .lock {
@@ -61,7 +62,7 @@
     .pin {
       width: 100%;
       height: 20px;
-      background-color: #705d47;
+      background-color: #a8811b;
       position: absolute;
       bottom: 0;
       transition: bottom 0.1s;
@@ -73,10 +74,14 @@
     }
 
     .score {
-      margin-bottom: 20px;
-      font-size: 24px;
-      font-weight: bold;
+      position: fixed; 
+      bottom: 0; 
+      left: 50%;
+      transform: translateX(-50%); 
+      color: white;
+      font-size: 80px;
     }
+
     #tooltip {
       position: absolute;
       bottom: 20px;
@@ -97,6 +102,7 @@
       display: inline-block;
       margin-left: 10px;
     }
+
     .buttonexit {
       position: absolute;
       top: 10px;
@@ -109,17 +115,46 @@
       font-size: 1.5em;
       transition: background-color 0.3s, color 0.3s;
     }
+
     .buttonexit:hover {
         background-color: #CD090F;
         color: #333;
+    }
+
+    .pick {
+      width: 210px;
+      height: 15px;
+      background-color: #999;
+      position: absolute;
+      bottom: -20px; /* Adjust as needed */
+      left: -100px; /* Move further left */
+      transform-origin: center; /* Origin for animation */
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease; /* Smooth animation */
+    }
+
+    .pick:before {
+      content: '';
+      width: 15px;
+      height: 50px;
+      background-color: #999;
+      position: absolute;
+      bottom: 0px;
+      left: 200px;
+      border-radius: 5px;
+    }
+
+    .pick.animate {
+      transform: rotate(-10deg); /* Rotate on animation */
     }
   </style>
 </head>
 
 <body>
-  <a href="mafiamenu.html" class="buttonexit">EXIT</a>
+  <a href="mafiamenu.php" class="buttonexit">EXIT</a>
   <div class="container">
-    <span id="score" class="score">Score: 0</span>
+    <span id="score" class="score">0</span>
     <div class="lock-container">
       <div class="lock" id="lock1">
         <div class="pin"></div>
@@ -130,6 +165,7 @@
       <div class="lock" id="lock3">
         <div class="pin"></div>
       </div>
+      <div class="pick" id="pick"></div>
     </div>
   </div>
   <div id="tooltip">
@@ -140,6 +176,7 @@
   <script>
     let score = 0;
     const locks = document.querySelectorAll('.lock');
+    const pick = document.getElementById('pick');
     let currentLockIndex = 0;
     let positions = [0, 0, 0];
     let sweetSpots = [];
@@ -151,7 +188,20 @@
       }
     }
 
+    function updatePickPosition() {
+      const lockWidth = locks[0].offsetWidth;
+      pick.style.left = `${currentLockIndex * (lockWidth + 20) + (lockWidth / 2) - (pick.offsetWidth / 2) - 50}px`;
+    }
+
+    function animatePick() {
+      pick.classList.add('animate');
+      setTimeout(() => {
+        pick.classList.remove('animate');
+      }, 200);
+    }
+
     generateSweetSpots();
+    updatePickPosition();
 
     document.addEventListener('keydown', (e) => {
       const currentLock = locks[currentLockIndex];
@@ -164,6 +214,7 @@
           positions[currentLockIndex] = currentPosition;
           pin.style.bottom = `${currentPosition}px`;
           checkSweetSpot(currentLockIndex, currentPosition, pin);
+          animatePick();
         }
       } else if (e.key === 'ArrowDown') {
         if (currentPosition > 0) {
@@ -171,14 +222,16 @@
           positions[currentLockIndex] = currentPosition;
           pin.style.bottom = `${currentPosition}px`;
           checkSweetSpot(currentLockIndex, currentPosition, pin);
+          animatePick();
         }
       } else if (e.key === 'e') {
         if (Math.abs(positions[currentLockIndex] - sweetSpots[currentLockIndex]) <= tolerance) {
           pin.classList.add('green');
           currentLockIndex++;
+          updatePickPosition();
           if (currentLockIndex >= locks.length) {
             score++;
-            document.getElementById("score").innerHTML = "Score: " + score;
+            document.getElementById("score").innerHTML = score;
             resetLocks();
           }
         } else {
@@ -189,6 +242,7 @@
             positions[currentLockIndex] = 0;
             locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
             locks[currentLockIndex].querySelector('.pin').classList.remove('green');
+            updatePickPosition();
           }
         }
       }
@@ -212,13 +266,14 @@
         pin.classList.remove('green');
         pin.style.bottom = '0px';
       });
+      updatePickPosition();
     }
 
     function movePinsDown() {
       const pin = locks[currentLockIndex].querySelector('.pin');
       let currentPosition = positions[currentLockIndex];
 
-      if (currentPosition > 0 ) {
+      if (currentPosition > 0) {
         currentPosition -= 1;
         positions[currentLockIndex] = currentPosition;
         pin.style.bottom = `${currentPosition}px`;
@@ -226,10 +281,8 @@
       }
     }
 
-    // Soupne se dolu kazdych 50ms
+    // Move pins down every 50ms
     setInterval(movePinsDown, 50);
-
   </script>
 </body>
-
 </html>

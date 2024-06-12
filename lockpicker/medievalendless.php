@@ -88,7 +88,7 @@
     <canvas id="lockCanvas" width="800" height="700"></canvas>
     <canvas id="cursorCanvas"></canvas>
 
-    <a href="medievalmenu.html" class="buttonexit">EXIT</a>
+    <a href="medievalmenu.php" class="buttonexit">EXIT</a>
 
     <div id="tooltip">
         <div class="tooltip-item">Restart: <span class="tooltip-key">R</span></div>
