@@ -85,9 +85,6 @@ class Login
                 session_start();
                 $_SESSION['user_id'] = $result['id'];
                 $_SESSION['username'] = $result['username'];
-                // Přesměrování na chráněnou stránku nebo zobrazení úspěšného přihlášení
-                header("Location: dashboard.php");
-                exit();
             }
         }
     }
