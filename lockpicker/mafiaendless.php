@@ -1,6 +1,6 @@
 <?php
 
-    include "inc/loader.php";
+    include "../inc/loader.php";
 
     $Login = new Login();
     $Login->checkRememberMe();
