@@ -4,7 +4,16 @@ include "inc/loader.php";
 
 $result = "";
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+$Login = new Login();
+$Login->checkRememberMe();
+
+if (isset($_SESSION['user_id']))
+{
+    $Login->checkVerification($_SESSION['user_id']);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") 
+{
     $Signup = new Signup();
     $result = $Signup->Evaluate($_POST);
 
@@ -20,6 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <title>Sign Up Now!</title>
 </head>
 <body>
+
+    <?php 
+        if ($result != "") 
+        {
+            echo $result;
+        }
+    ?>
+
     <form action="" method="POST">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>

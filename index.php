@@ -4,7 +4,12 @@
 
     $Login = new Login();
     $Login->checkRememberMe();
-    $Login->checkVerification($_SESSION['user_id'])
+
+    if (isset($_SESSION['user_id']))
+    {
+        $Login->checkVerification($_SESSION['user_id']);
+    }
+    
 
 ?>
 <!DOCTYPE html>

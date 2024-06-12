@@ -9,8 +9,7 @@
         $Login = new Login();
         $msg = $Login->Evaluate($_POST);
 
-        if ($msg != "") echo $msg;
-        else 
+        if ($msg == "") 
         {
             session_start();
             $_SESSION['user_id'] = $result['id'];
@@ -28,6 +27,14 @@
     <title>Sign In Now!</title>
 </head>
 <body>
+
+<?php 
+        if ($msg != "") 
+        {
+            echo $msg;
+        }
+    ?>
+
 <form action="" method="post">
     <input type="email" name="email" required placeholder="Email">
     <input type="password" name="password" required placeholder="Password">
