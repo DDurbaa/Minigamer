@@ -88,4 +88,18 @@ class Login
             }
         }
     }
+
+    public function checkVerification($userId)
+    {
+        $DB = new DB();
+        $result = $DB->query("SELECT verified FROM users WHERE id = ? LIMIT 1", $userId);
+        $user = $result->fetchArray();
+
+        if ($user['verified'] == 0) 
+        {
+            header("Location: not-verified.php");
+            exit();
+        }
+    }
+
 }

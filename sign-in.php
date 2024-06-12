@@ -12,6 +12,9 @@
         if ($msg != "") echo $msg;
         else 
         {
+            session_start();
+            $_SESSION['user_id'] = $result['id'];
+            $_SESSION['username'] = $result['username'];
             header("Location: index.php");
         }
     }

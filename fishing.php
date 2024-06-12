@@ -15,7 +15,7 @@
     <main>
         <div class="cards">
             <div class="card" id="valley">
-                <a href="fishing/valleymenu.html">
+                <a href="fishing/valleymenu.php">
                     <div class="card-content">
                         <h2>VALLEY</h2>
                     </div>

@@ -21,7 +21,7 @@ if (isset($_GET['t']))
 } 
 else 
 {
-    header("Location: index.html");
+    header("Location: index.php");
 }
 ?>
 <!DOCTYPE html>

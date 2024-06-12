@@ -15,28 +15,28 @@
     <main>
         <div class="cards">
             <div class="card" id="medieval">
-                <a href="lockpicker/medievalmenu.html">
+                <a href="lockpicker/medievalmenu.php">
                     <div class="card-content">
                         <h2>MEDIEVAL</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="mafia">
-                <a href="lockpicker/mafiamenu.html">
+                <a href="lockpicker/mafiamenu.php">
                     <div class="card-content">
                         <h2>MAFIA</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="wasteland">
-                <a href="lockpicker/schoolmenu.html">
+                <a href="lockpicker/schoolmenu.php">
                     <div class="card-content">
                         <h2>SCHOOL</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="random">
-                <a href="random.html">
+                <a href="random.php">
                     <div class="card-content">
                         <h2>RANDOM</h2>
                     </div>

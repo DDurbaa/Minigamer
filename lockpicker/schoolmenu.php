@@ -70,13 +70,13 @@
     <div class="menu">
         <h1>SCHOOL</h1>
         <div class="buttons">
-            <a href="schoolendless.html" class="button">TIMED</a>
-            <a href="schoolendless.html" class="button">ENDLESS</a>
+            <a href="schoolendless.php" class="button">TIMED</a>
+            <a href="schoolendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
             <a href="#" class="button">HOW TO PLAY</a>
             <a href="#" class="button">LEADERBOARD</a>
-            <a href="../lockpicking.html" class="buttonexit">EXIT</a>
+            <a href="../lockpicking.php" class="buttonexit">EXIT</a>
         </div>
     </div>
 </body>

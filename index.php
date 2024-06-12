@@ -1,3 +1,12 @@
+<?php
+
+    include "inc/loader.php";
+
+    $Login = new Login();
+    $Login->checkRememberMe();
+    $Login->checkVerification($_SESSION['user_id'])
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +18,16 @@
 <body>
     <header>
         <div class="logo">MINIGAMER</div>
-        <a href="#" class="buttonsignin">SIGN IN</a>
+        <?php 
+        if (!isset($_SESSION['user_id'])) 
+        {
+            echo "<a href='#' class='buttonsignin'>SIGN IN</a>";
+        }
+        else 
+        {
+            echo "<a href='#' class='buttonsignin'>LOGOUT</a>";
+        }
+        ?>
     </header>
     <main>
         <div class="description">
@@ -18,21 +36,21 @@
         </div>
         <div class="cards">
             <div class="card" id="lockpicking">
-                <a href="lockpicking.html">
+                <a href="lockpicking.php">
                     <div class="card-content">
                         <h2>LOCKPICKING</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="hacking">
-                <a href="hacking.html">
+                <a href="hacking.php">
                     <div class="card-content">
                         <h2>HACKING</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="fishing">
-                <a href="fishing.html">
+                <a href="fishing.php">
                     <div class="card-content">
                         <h2>FISHING</h2>
                     </div>

@@ -70,12 +70,12 @@
     <div class="menu">
         <h1>VALLEY</h1>
         <div class="buttons">
-            <a href="valley.html" class="button">PLAY</a>
+            <a href="valley.php" class="button">PLAY</a>
         </div>
         <div class="bottom-buttons">
             <a href="#" class="button">HOW TO PLAY</a>
             <a href="#" class="button">LEADERBOARD</a>
-            <a href="../fishing.html" class="buttonexit">EXIT</a>
+            <a href="../fishing.php" class="buttonexit">EXIT</a>
         </div>
     </div>
 </body>

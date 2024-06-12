@@ -15,28 +15,28 @@
     <main>
         <div class="cards">
             <div class="card" id="cyberpunk">
-                <a href="hacker/cyberpunkmenu.html">
+                <a href="hacker/cyberpunkmenu.php">
                     <div class="card-content">
                         <h2>CYBERPUNK</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="utopia">
-                <a href="#">
+                <a href="hacker/bioshockmenu.php">
                     <div class="card-content">
                         <h2>UTOPIA</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="mayhem">
-                <a href="#">
+                <a href="hacker/mayhemmenu.php">
                     <div class="card-content">
                         <h2>MAYHEM</h2>
                     </div>
                 </a>
             </div>
             <div class="card" id="randomhacking">
-                <a href="random.html">
+                <a href="random.php">
                     <div class="card-content">
                         <h2>RANDOM</h2>
                     </div>
