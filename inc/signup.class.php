@@ -115,6 +115,10 @@ class Signup
 
         $DB->query("INSERT INTO users (username, email, password, token, verified, created_at) VALUES (?, ?, ?, ?, 0, NOW())", $username, $email, $password, $token);
         $this->sendVerificationEmail($data['email'], $token, $data['username']);
+        $result = $DB->query("SELECT * FROM users WHERE email = ? LIMIT 1", $email)->fetchArray();
+        session_start();
+        $_SESSION['user_id'] = $result['id'];
+        $_SESSION['username'] = $result['username'];
     }
 
     private function sendVerificationEmail($email, $token, $username) {     
@@ -161,7 +165,7 @@ class Signup
         return false;
     }
 
-    private function EmailIsTaken($email)
+    public function EmailIsTaken($email)
     {
         $DB = new DB();
         $DB->query("SELECT email FROM users WHERE email = ?", $email);

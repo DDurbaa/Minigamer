@@ -2,11 +2,15 @@
 
     include "inc/loader.php";
 
+    session_start();
+
     $Login = new Login();
     $Login->checkRememberMe();
 
+    
     if (isset($_SESSION['user_id']))
     {
+        echo $_SESSION['user_id'];
         $Login->checkVerification($_SESSION['user_id']);
     }
     
@@ -27,11 +31,11 @@
         <?php 
         if (!isset($_SESSION['user_id'])) 
         {
-            echo "<a href='#' class='buttonsignin'>SIGN IN</a>";
+            echo "<a href='sign-in.php' class='buttonsignin'>SIGN IN</a>";
         }
         else 
         {
-            echo "<a href='#' class='buttonsignin'>LOGOUT</a>";
+            echo "<a href='log-out.php' class='buttonsignin'>LOGOUT</a>";
         }
         ?>
     </header>
