@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 include "inc/loader.php";
 
@@ -23,9 +24,12 @@ if (isset($_SESSION['user_id']))
     <header>
         <div class="logo">MINIGAMER</div>
         <?php 
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user_id'])) 
+        {
             echo "<a href='sign-in.php' class='buttonsignin'>SIGN IN</a>";
-        } else {
+        } 
+        else 
+        {
             echo "<a href='log-out.php' class='buttonsignin'>LOGOUT</a>";
         }
         ?>

@@ -90,7 +90,7 @@
         </div>
         <div class="bottom-buttons">
             <a href="#" class="button">HOW TO PLAY</a>
-            <a href="#" class="button">LEADERBOARD</a>
+            <a href="medieval-leaderboard.php" class="button">LEADERBOARD</a>
             <a href="../lockpicking.php" class="buttonexit">EXIT</a>
         </div>
     </div>
