@@ -1,8 +1,6 @@
 <?php 
 include "inc/loader.php";
 
-session_start();
-
 $msg = "";
 $section = isset($_GET['section']) ? $_GET['section'] : '';
 

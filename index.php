@@ -1,20 +1,14 @@
 <?php
+session_start();
+include "inc/loader.php";
 
-    include "inc/loader.php";
+$Login = new Login();
+$Login->checkRememberMe();
 
-    session_start();
-
-    $Login = new Login();
-    $Login->checkRememberMe();
-
-    
-    if (isset($_SESSION['user_id']))
-    {
-        echo $_SESSION['user_id'];
-        $Login->checkVerification($_SESSION['user_id']);
-    }
-    
-
+if (isset($_SESSION['user_id'])) 
+{
+    $Login->checkVerification($_SESSION['user_id']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,12 +23,9 @@
     <header>
         <div class="logo">MINIGAMER</div>
         <?php 
-        if (!isset($_SESSION['user_id'])) 
-        {
+        if (!isset($_SESSION['user_id'])) {
             echo "<a href='sign-in.php' class='buttonsignin'>SIGN IN</a>";
-        }
-        else 
-        {
+        } else {
             echo "<a href='log-out.php' class='buttonsignin'>LOGOUT</a>";
         }
         ?>
@@ -68,7 +59,5 @@
             </div>
         </div>
     </main>
-    
-    
 </body>
 </html>
