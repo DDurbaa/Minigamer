@@ -89,7 +89,7 @@
             <a href="cyberpunkendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
-            <a href="#" class="button">HOW TO PLAY</a>
+            <a href="cyberpunktutorial.php" class="button">HOW TO PLAY</a>
             <a href="#" class="button">LEADERBOARD</a>
             <a href="../hacking.php" class="buttonexit">EXIT</a>
         </div>
