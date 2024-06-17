@@ -85,7 +85,7 @@
     <div class="menu">
         <h1>MAFIA</h1>
         <div class="buttons">
-            <a href="mafiaendless.php" class="button">TIMED</a>
+            <a href="mafiatimed.php" class="button">TIMED</a>
             <a href="mafiaendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
