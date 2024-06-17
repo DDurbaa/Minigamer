@@ -121,8 +121,7 @@ class Signup
         $_SESSION['username'] = $result['username'];
     }
 
-    private function sendVerificationEmail($email, $token, $username) {     
-    
+    private function sendVerificationEmail($email, $token, $username) {
         // Vytvoř nový objekt PHPMailer
         $mail = new PHPMailer(true);
     
@@ -143,7 +142,93 @@ class Signup
             
             // Tělo zprávy v HTML formátu
             $mail->isHTML(true);
-            $mail->Body = 'Welcome to Minigamer, ' . $username . '! <br> Click the link below to verify your email!: <br> <a href="http://localhost/Minigamer/Lockpicker/verify-email.php?t=' . $token . '">Verify Email</a>';
+    
+            // Vložení HTML šablony do těla zprávy
+            $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Verify Your Email</title>
+                <style>
+                    body {
+                        margin: 0;
+                        font-family: Arial, sans-serif;
+                        background-color: #000000; /* Set the background to black */
+                        color: #ffffff;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        padding: 20px; /* Add some padding */
+                    }
+    
+                    .container {
+                        max-width: 600px;
+                        margin: 20px;
+                        padding: 20px;
+                        background-color: #1e1e1e;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                    }
+    
+                    .logo-container {
+                        text-align: center;
+                        padding-bottom: 20px;
+                    }
+    
+                    .logo-container img {
+                        width: 150px;
+                    }
+    
+                    .welcome-text {
+                        text-align: center;
+                        color: #ffcc00;
+                    }
+    
+                    .content-text {
+                        font-size: 1.2em;
+                        color: #ffffff; /* Text color set to white */
+                    }
+    
+                    .button-container {
+                        text-align: center;
+                    }
+    
+                    .button-container a {
+                        background-color: #1d1d1dfc;
+                        color: white;
+                        padding: 15px 30px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        border: 2px solid #ffcc00;
+                        border-radius: 5px;
+                        font-size: 1.2em;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="logo-container">
+                        <img src="https://vanek-josef.mzf.cz/mlogo.png" alt="Logo">
+                    </div>
+                    <div class="text-container">
+                        <h2 class="welcome-text">Welcome to Minigamer!</h2>
+                        <p class="content-text">Hi ' . htmlspecialchars($username) . ',</p>
+                        <p class="content-text">Thank you for signing up for Minigamer. To complete your registration, please confirm your email address by clicking the button below:</p>
+                        <div class="button-container">
+                            <a href="http://localhost/Minigamer/Lockpicker/verify-email.php?t=' . urlencode($token) . '">Confirm Email</a>
+                        </div>
+                        <p class="content-text">Thanks,</p>
+                        <p class="content-text">The Minigamer Team</p>
+                    </div>
+                </div>
+            </body>
+            </html>';
+    
+            $mail->Body = $body;
     
             // Odeslání e-mailu
             $mail->send();
@@ -152,6 +237,8 @@ class Signup
             echo 'Failed to send verification email. Error: ' . $mail->ErrorInfo;
         }
     }
+    
+    
 
     private function UsernameIsTaken($username)
     {
@@ -181,16 +268,7 @@ class Signup
     {
         $minLength = 8;
 
-        // velke pismeno
-        $hasUppercase = preg_match('/[A-Z]/', $password);
-
-        // male pismeno
-        $hasLowercase = preg_match('/[a-z]/', $password);
-
-        // cislo
-        $hasNumber = preg_match('/[0-9]/', $password);
-
-        return strlen($password) >= $minLength && $hasUppercase && $hasLowercase && $hasNumber;
+        return strlen($password) >= $minLength;
     }
 }
 

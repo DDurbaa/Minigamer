@@ -5,10 +5,12 @@
     session_start();
 
     $Login = new Login();
+    $Score = new Score(1);
     $Login->checkRememberMe();
 
     if (isset($_SESSION['user_id']))
     {
+        $Score = new Score(1, $_SESSION['user_id']);
         $Login->checkVerification($_SESSION['user_id']);
     }
     

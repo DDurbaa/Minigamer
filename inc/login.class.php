@@ -100,6 +100,7 @@ class Login
             header("Location: not-verified.php");
             exit();
         }
+        
     }
 
 }

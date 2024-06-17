@@ -1,3 +1,26 @@
+<?php
+
+session_start();
+include "inc/loader.php";
+
+$Login = new Login();
+$Login->checkRememberMe();
+
+if (isset($_SESSION['user_id'])) 
+{
+    
+    $DB = new DB();
+    $result = $DB->query("SELECT verified FROM users WHERE id = ? LIMIT 1", $_SESSION['user_id']);
+    $user = $result->fetchArray();
+
+    if ($user['verified'] == 1) 
+    {
+        header("Location: index.php");
+        exit();
+    }
+
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
