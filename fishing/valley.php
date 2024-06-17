@@ -24,7 +24,7 @@
 </head>
 <body>
   <a href="valleymenu.php" class="buttonexit">EXIT</a>
-  <div class="fishing" data-reelpower="10" data-baitweight="1" data-progress="2" data-progresspenalty="3" data-progressupdaterate="200">
+  <div class="fishing" data-reelpower="20" data-baitweight="1" data-progress="3" data-progresspenalty="3" data-progressupdaterate="100">
     <div class="rod">
       <div class="reel">
         <div class="handle"></div>
