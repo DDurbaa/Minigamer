@@ -19,7 +19,7 @@ include "../inc/loader.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../mlogo.png">
-    <title>Cyberpunk Hacking Tutorial</title>
+    <title>Cyberpunk Tutorial</title>
     <style>
         body {
             display: flex;
@@ -193,8 +193,8 @@ include "../inc/loader.php";
         }
 
         .tutorial-step {
-            margin-top: 20px;
-            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-size: 1.4em;
         }
 
         .highlighted {
@@ -209,17 +209,20 @@ include "../inc/loader.php";
             color: #00ff00;
         }
 
-        .end-message button {
+        .end-message a {
+            display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
-            font-size: 20px;
             border: 2px solid #00ff00;
-            background-color: #1a1a1a;
+            border-radius: 5px;
+            text-decoration: none;
             color: #00ff00;
+            font-size: 20px;
+            background-color: #1a1a1a;
             cursor: pointer;
         }
 
-        .end-message button:hover {
+        .end-message a:hover {
             background-color: #00ff00;
             color: #1a1a1a;
         }
@@ -282,9 +285,8 @@ include "../inc/loader.php";
             </div>
         </div>
         <div class="end-message" id="end-message">
-            <div id="end-text">Congratulations! You have completed the tutorial.</div>
-            <button onclick="window.location.href='cyberpunkmenu.php'">Back to Menu</button>
-            <button id="retry-button">Try Again</button>
+            <a href="cyberpunkmenu.php" class="button">Back to Menu</a>
+            <a id="retry-button" href="#" class="button">Try Again</a>
         </div>
     </div>
     <div id="tooltip">
@@ -313,47 +315,47 @@ include "../inc/loader.php";
             let score = 0;
             let secondSequenceCompleted = false;
             let anySequenceCompleted = false;
+            let tutorialEnded = false;
 
             function checkSequences() {
-    const sequencesDivs = document.querySelectorAll('.sequence-required');
-    let allCompleted = true;
-    let anySequenceCompleted = false;
+                if (tutorialEnded) return;
 
-    sequencesDivs.forEach((sequenceDiv, index) => {
-        const sequence = sequenceDiv.getAttribute('data-sequence').split(' ');
-        if (currentSequence.join(' ').includes(sequence.join(' '))) {
-            if (!sequenceDiv.classList.contains('sequence-completed')) {
-                sequenceDiv.classList.add('sequence-completed');
-                score++;
-                scoreElement.textContent = score;
-                anySequenceCompleted = true;
-                if (index === 1) {
-                    secondSequenceCompleted = true;
+                const sequencesDivs = document.querySelectorAll('.sequence-required');
+                let allCompleted = true;
+                anySequenceCompleted = false;
+
+                sequencesDivs.forEach((sequenceDiv, index) => {
+                    const sequence = sequenceDiv.getAttribute('data-sequence').split(' ');
+                    if (currentSequence.join(' ').includes(sequence.join(' '))) {
+                        if (!sequenceDiv.classList.contains('sequence-completed')) {
+                            sequenceDiv.classList.add('sequence-completed');
+                            score++;
+                            scoreElement.textContent = score;
+                            anySequenceCompleted = true;
+                            if (index === 1) {
+                                secondSequenceCompleted = true;
+                            }
+                        }
+                    }
+
+                    if (!sequenceDiv.classList.contains('sequence-completed')) {
+                        allCompleted = false;
+                    }
+                });
+
+                if (bufferIndex >= bufferCells.length) {
+                    if (allCompleted) {
+                        endTutorial('Congratulations! You have completed the tutorial.');
+                    } else {
+                        endTutorial('You didn\'t complete all the sequences. Please try again.');
+                    }
+                }
+
+                if (secondSequenceCompleted) {
+                    tutorialStep.innerHTML = 'For each completed sequence, you gain 1 point.';
+                    secondSequenceCompleted = false;
                 }
             }
-        }
-
-        if (!sequenceDiv.classList.contains('sequence-completed')) {
-            allCompleted = false;
-        }
-    });
-
-    if (allCompleted) {
-        endTutorial('Congratulations! You have completed the tutorial.');
-    } else if (bufferIndex >= bufferCells.length) {
-        if (!anySequenceCompleted) {
-            endTutorial('You did not complete any sequences. Try again.');
-        } else {
-            endTutorial('Congratulations! You have completed the tutorial.');
-        }
-    }
-
-    if (secondSequenceCompleted) {
-        tutorialStep.innerHTML = 'For each completed sequence, you gain 1 point.';
-        secondSequenceCompleted = false;
-    }
-}
-
 
             function updateSelectableCells() {
                 const cells = document.querySelectorAll('.cell');
@@ -410,6 +412,7 @@ include "../inc/loader.php";
                 gameContainer.style.display = 'grid';
                 endMessage.style.display = 'none';
                 anySequenceCompleted = false;
+                tutorialEnded = false;
             }
 
             function attachEventListeners() {
@@ -464,16 +467,20 @@ include "../inc/loader.php";
                 // Allow first selection on any row or column
                 cells.forEach(cell => cell.classList.add('selectable'));
             }
-            function endTutorial(message) {
-    tutorialStep.innerHTML = message;
-    scoreElement.style.display = 'none';
-    tooltip.style.display = 'none';
-    gameContainer.style.display = 'none';
-    endMessage.style.display = 'flex';
-    endText.innerHTML = message;
-}
 
-            retryButton.addEventListener('click', () => {
+            function endTutorial(message) {
+                if (tutorialEnded) return;
+                tutorialEnded = true;
+                tutorialStep.innerHTML = message;
+                scoreElement.style.display = 'none';
+                tooltip.style.display = 'none';
+                gameContainer.style.display = 'none';
+                endMessage.style.display = 'flex';
+                endText.innerHTML = message;
+            }
+
+            retryButton.addEventListener('click', (event) => {
+                event.preventDefault();
                 location.reload();
             });
 
@@ -489,8 +496,6 @@ include "../inc/loader.php";
 
             init();
         });
-
     </script>
 </body>
-
 </html>
