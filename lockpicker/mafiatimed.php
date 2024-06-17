@@ -1,14 +1,16 @@
 <?php
 
-    include "../inc/loader.php";
+include "../inc/loader.php";
 
-    $Login = new Login();
-    $Login->checkRememberMe();
+session_start();
 
-    if (isset($_SESSION['user_id']))
-    {
-        $Login->checkVerification($_SESSION['user_id']);
-    }
+$Login = new Login();
+$Login->checkRememberMe();
+
+if (isset($_SESSION['user_id']))
+{
+    $Login->checkVerification($_SESSION['user_id']);
+}
     
 
 ?>
