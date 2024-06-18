@@ -1,51 +1,53 @@
-<?php
-
-    include "../inc/loader.php";
-
-    $Login = new Login();
-    $Login->checkRememberMe();
-
-    if (isset($_SESSION['user_id']))
-    {
-        $Login->checkVerification($_SESSION['user_id']);
-    }
-    
-
-?>
 <!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../mlogo.png">
-    <title>Hacking Minihra</title>
+    <title>Utopia Hacking</title>
     <style>
+        @keyframes pulseBorder {
+            0% {
+                box-shadow: 0 0 50px var(--pulse-color);
+            }
+            100% {
+                box-shadow: none;
+            }
+        }
+
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            flex-direction: column;
-            background-color: #333;
-            color: white;
+            color: #00ff00;
+            background-color: #1a1a1a;
             font-family: Arial, sans-serif;
+            overflow: hidden; /* Disable scrolling */
+            margin: 0; /* Remove default margin */
         }
 
         #game {
             position: relative;
-            width: 400px;
-            height: 50px;
-            border: 2px solid white;
+            width: 700px; /* Zvětšená šířka herního pole */
+            height: 75px; /* Zvětšená výška herního pole */
             margin-bottom: 20px;
             overflow: hidden;
+            border: 4px solid #2a2a2a;
+            --pulse-color: #2a2a2a; /* Default border color */
+        }
+
+        #game.pulse {
+            animation: pulseBorder 2s forwards; /* Slow fading animation */
         }
 
         #pointer {
             position: absolute;
             float: right;
-            width: 5px;
-            height: 50px;
-            background-color: yellow;
+            width: 10px; /* Zvětšená šířka pointeru */
+            height: 75px; /* Zvětšená výška pointeru */
+            background-color: #ffcc00;
         }
 
         #zones {
@@ -59,15 +61,15 @@
         }
 
         .green {
-            background-color: green;
+            background-color: #0be20b;
         }
 
         .red {
-            background-color: red;
+            background-color: #CD090F;
         }
 
         .blue {
-            background-color: blue;
+            background-color: #007fff;
         }
 
         .grey {
@@ -75,18 +77,61 @@
         }
 
         #score {
-            font-size: 20px;
-            margin-bottom: 20px;
+            position: fixed; /* Change to fixed */
+            bottom: 0; /* Stick to the bottom */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            color: white;
+            font-size: 80px;
         }
 
+        .buttonexit {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 20px 40px;
+            border: 2px solid #CD090F;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-size: 1.5em;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .buttonexit:hover {
+            background-color: #CD090F;
+            color: #333;
+        }
+
+        #tooltip {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            font-size: 26px;
+            text-align: right;
+        }
+
+        .tooltip-item {
+            margin: 5px 0;
+        }
+
+        .tooltip-key {
+            background-color: #444;
+            border-radius: 3px;
+            padding: 4px 8px;
+            display: inline-block;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
+    <a href="utopiamenu.php" class="buttonexit">EXIT</a>
     <div id="game">
         <div id="pointer"></div>
         <div id="zones"></div>
     </div>
-    <div id="score">Score: 0</div>
+    <div id="score">0</div>
     <script>
         const fields = [
             ['blue', 'blue', 'red', 'gray', 'gray', 'gray', 'red', 'red', 'red', 'blue', 'gray', 'green', 'green'],
@@ -96,54 +141,73 @@
             ['red', 'red', 'gray', 'green', 'green', 'red', 'blue', 'red', 'blue', 'gray', 'red', 'red', 'gray']
         ];
 
-        
         let score = 0;
         let currentFieldIndex = Math.floor(Math.random() * fields.length); // Vybere náhodný index pro první pole
         const pointer = document.getElementById('pointer');
         const scoreDisplay = document.getElementById('score');
         const zonesContainer = document.getElementById('zones');
-        let direction = -1;
+        const gameContainer = document.getElementById('game');
+        let direction = Math.random() < 0.5 ? -1 : 1;
 
         document.addEventListener('keydown', (event) => {
             if (event.key === 'e' || event.key === 'E') {
                 stopPointer();
-            }
-            else if (event.key === 'r' || event.key=== 'E'){
+            } else if (event.key === 'r' || event.key === 'R') {
                 resetGame();
             }
         });
 
         function stopPointer() {
-            const pointerPosition = pointer.getBoundingClientRect();
+            const pointerRect = pointer.getBoundingClientRect();
             const zones = document.querySelectorAll('.zone');
+            let hit = false;
             zones.forEach((zone) => {
-                const zonePosition = zone.getBoundingClientRect();
-                if (pointerPosition.left >= zonePosition.left && pointerPosition.right <= zonePosition.right) {
+                const zoneRect = zone.getBoundingClientRect();
+                // Přesnější kontrola pozice pointeru vůči zónám
+                if (pointerRect.right > zoneRect.left && pointerRect.left < zoneRect.right) {
+                    hit = true;
                     if (zone.classList.contains('green')) {
                         score++;
+                        pulseBorder('#0be20b');
+                        console.log('Hit green zone');
                     } else if (zone.classList.contains('blue')) {
                         score += 2;
+                        pulseBorder('#007fff');
+                        console.log('Hit blue zone');
                     } else if (zone.classList.contains('red')) {
-                        score--;
+                        score = Math.max(0, score - 3);
+                        pulseBorder('#CD090F');
+                        console.log('Hit red zone');
                     } else if (zone.classList.contains('grey')) {
-                        score += 0;
+                        pulseBorder('grey');
+                        console.log('Hit grey zone');
                     }
-                    scoreDisplay.textContent = `Score: ${score}`;
+                    scoreDisplay.textContent = `${score}`;
                     currentFieldIndex = (currentFieldIndex + 1) % fields.length;
                     resetPointer();
                     generateZones(fields[currentFieldIndex]);
                 }
             });
+            if (!hit) {
+                console.log('Missed all zones');
+            }
+        }
+
+        function pulseBorder(color) {
+            gameContainer.style.setProperty('--pulse-color', color);
+            gameContainer.classList.remove('pulse'); // Restart the animation
+            void gameContainer.offsetWidth; // Trigger reflow to restart animation
+            gameContainer.classList.add('pulse');
         }
 
         function resetPointer() {
             pointer.style.left = '50%';
-            direction = -1;
+            direction = Math.random() < 0.5 ? -1 : 1;
         }
 
         function resetGame() {
             score = 0;
-            scoreDisplay.textContent = `Score: ${score}`;
+            scoreDisplay.textContent = `${score}`;
             currentFieldIndex = Math.floor(Math.random() * fields.length); // Vybere náhodný index pro první pole
             resetPointer();
             generateZones(fields[currentFieldIndex]);
@@ -179,7 +243,7 @@
             const gameWidth = document.getElementById('game').offsetWidth;
             const pointerWidth = pointer.offsetWidth;
             let left = parseFloat(pointer.style.left || '50%');
-            left += direction * 7; // Adjust the speed of movement here
+            left += direction * 9; // Adjust the speed of movement here
             if (left <= 0) {
                 left = 0;
                 direction = 1;
@@ -194,5 +258,9 @@
         resetGame();
         requestAnimationFrame(movePointer);
     </script>
+    <div id="tooltip">
+        <div class="tooltip-item">Restart: <span class="tooltip-key">R</span></div>
+        <div class="tooltip-item">Hack: <span class="tooltip-key">E</span></div>
+    </div>
 </body>
 </html>
