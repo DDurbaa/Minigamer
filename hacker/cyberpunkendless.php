@@ -203,24 +203,29 @@
             }
 
             function generateRandomMatrix() {
-                const matrix = [];
-                const minCount = 4;
-                const totalCells = 16;
+                const grid = Array.from({ length: 4 }, () => Array(4).fill(null));
+                const counts = { BD: 0, '1C': 0, '55': 0, E9: 0 };
+                const maxCount = 4;
+                const rowMaxDup = 1;
+                const colMaxDup = 1;
 
-                // Přidat minimálně 4x každé písmeno
-                codes.forEach(code => {
-                    for (let i = 0; i < minCount; i++) {
-                        matrix.push(code);
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        const availableCodes = codes.filter(code => counts[code] < maxCount &&
+                            grid[row].filter(c => c === code).length <= rowMaxDup &&
+                            grid.map(r => r[col]).filter(c => c === code).length <= colMaxDup);
+
+                        if (availableCodes.length === 0) {
+                            throw new Error('Failed to generate valid grid');
+                        }
+
+                        const code = availableCodes[Math.floor(Math.random() * availableCodes.length)];
+                        grid[row][col] = code;
+                        counts[code]++;
                     }
-                });
-
-                // Doplnit zbylé buňky náhodnými písmeny
-                while (matrix.length < totalCells) {
-                    matrix.push(codes[Math.floor(Math.random() * codes.length)]);
                 }
 
-                shuffle(matrix);
-                return matrix;
+                return grid.flat();
             }
 
             function generateRandomSequences() {
