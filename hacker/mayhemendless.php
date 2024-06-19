@@ -77,6 +77,21 @@
             display: inline-block;
             margin-left: 10px;
         }
+        @keyframes greenGlow {
+            0% {
+                box-shadow: 0 0 0 rgba(0, 255, 0, 0);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 255, 0, 1);
+            }
+            100% {
+                box-shadow: 0 0 0 rgba(0, 255, 0, 0);
+            }
+        }
+
+        .glow {
+            animation: greenGlow 1s ease-out infinite;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +121,7 @@
         let lastHitAngle = -Infinity; // Inicializace s hodnotou, která nemůže být dosažena
         const hitColors = ['#FF0', '#FF0', '#FF0'];
         const hitStatus = [false, false, false]; // Stav zásahu pro každý bod
+        const hitGlows = [false, false, false]; // Glow effect status for each point
 
         function generateRandomAngles() {
             targetPoints = [];
@@ -147,7 +163,22 @@
                 ctx.fillStyle = hitColors[index];
                 ctx.fill();
                 ctx.closePath();
+                if (hitGlows[index]) {
+                    drawGlow(x, y);
+                }
             });
+        }
+
+        function drawGlow(x, y) {
+            ctx.save();
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'rgba(0, 255, 0, 1)';
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fillStyle = '#0F0';
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
         }
 
         function drawMovingIndicator() {
@@ -167,6 +198,7 @@
                 if (!hitStatus[i] && Math.abs(currentAngle - targetPoints[i]) < targetWidth) {
                     hitColors[i] = '#0F0'; // Změnit barvu na zelenou při zásahu
                     hitStatus[i] = true; // Označit bod jako zasažený
+                    hitGlows[i] = true; // Enable glow effect
                     lastHitAngle = currentAngle; // Uložit úhel posledního zásahu
                     hits++;
                     if (hits === 3) {
@@ -185,6 +217,7 @@
             currentAngle = 0;
             hitColors.fill('#FF0');
             hitStatus.fill(false);
+            hitGlows.fill(false);
             lastHitAngle = -Infinity; // Reset úhlu posledního zásahu
             generateRandomAngles();
         }
