@@ -87,7 +87,7 @@
             <div class="tooltip-item">Restart: <span class="tooltip-key">R</span></div>
             <div class="tooltip-item">Select: <span class="tooltip-key">Space</span></div>
         </div>
-        <p id="score">0</p>
+        <div class="score" id="score">0</div>
     </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
