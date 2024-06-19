@@ -2,8 +2,6 @@
 
     include "inc/loader.php";
 
-    session_start();
-
     $Login = new Login();
     $Login->checkRememberMe();
 

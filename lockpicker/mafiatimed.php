@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <body>
   <a href="mafiamenu.php" class="buttonexit">EXIT</a>
   <div class="container">
-    <div id="timer">20</div>
+    <div id="timer">60</div>
     <span id="score" class="score">0</span>
     <div class="lock-container">
       <div class="lock" id="lock1">
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     let positions = [0, 0, 0];
     let sweetSpots = [];
     const tolerance = 5; // Tolerance na sweet spoty
-    let timeLeft = 20; // 60 seconds countdown
+    let timeLeft = 60; // 60 seconds countdown
     const timerElement = document.getElementById("timer");
     let popupActive = false;
     let form = document.getElementById('popupForm');
@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         messageElement.textContent += score;
         scoreAdded = true;
       }
-      console.log("test");
+      
       popup.style.display = "block";
       popupActive = true;
     }
@@ -311,7 +311,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       score = 0;
       document.getElementById("score").innerHTML = score;
       resetLocks();
-      timeLeft = 20;
+      timeLeft = 60;
       timerElement.textContent = timeLeft;
     }
 
@@ -369,7 +369,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
           popupActive = false; // Ensure popupActive is reset
           const popup = document.getElementById("popup");
           popup.style.display = "none"; // Hide the popup
-          resetGame();
+          form.submit();
           location.reload(); // Reload the page
         }
 

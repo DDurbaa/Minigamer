@@ -85,11 +85,11 @@
     <div class="menu">
         <h1>UTOPIA</h1>
         <div class="buttons">
-            <a href="utopiaendless.php" class="button">TIMED</a>
+            <a href="utopiatimed.php" class="button">TIMED</a>
             <a href="utopiaendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
-            <a href="#.php" class="button">HOW TO PLAY</a>
+            <a href="#" class="button">HOW TO PLAY</a>
             <a href="#" class="button">LEADERBOARD</a>
             <a href="../hacking.php" class="buttonexit">EXIT</a>
         </div>

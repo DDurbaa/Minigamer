@@ -1,6 +1,4 @@
 <?php
-
-session_start();
 include "inc/loader.php";
 
 $Login = new Login();
