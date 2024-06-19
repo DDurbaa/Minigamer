@@ -2,26 +2,45 @@
 
 include "../inc/loader.php";
 
-session_start();
-
 $Login = new Login();
 $Login->checkRememberMe();
+$popupMsg = "Sign in to save your score!";
+$gameScore = "";
+$Score = "";
+$best = "";
+$isUserLoggedIn = isset($_SESSION['user_id']);
 
-if (isset($_SESSION['user_id'])) 
-{
+if ($isUserLoggedIn) {
+  $Score = new Score(2, $_SESSION['user_id']);
   $Login->checkVerification($_SESSION['user_id']);
-} 
+  $best = $Score->getPlayerScore();
+  $popupMsg = "BEST: " . $best . " CURRENT: ";
+}
 
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+  if ($isUserLoggedIn) {
+    $gameScore = $_POST['score'];
+    if ($gameScore > $best) {
+      $Score->savePlayerScore($gameScore);
+    }
+  }
 
+  header("Location: " . $_SERVER['PHP_SELF']);
+}
 
 ?>
+
+<script>
+  // JESTLI JE PRIHLASENEJ PHP -> JS
+  const isUserLoggedIn = <?php echo json_encode($isUserLoggedIn); ?>;
+</script>
 <!DOCTYPE html>
 <html lang="cs">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mafia Endless</title>
+  <title>Mafia Timed</title>
   <style>
     body {
       height: 100vh;
@@ -201,7 +220,7 @@ if (isset($_SESSION['user_id']))
 <body>
   <a href="mafiamenu.php" class="buttonexit">EXIT</a>
   <div class="container">
-    <div id="timer">5</div> <!-- Add this line -->
+    <div id="timer">20</div>
     <span id="score" class="score">0</span>
     <div class="lock-container">
       <div class="lock" id="lock1">
@@ -222,32 +241,40 @@ if (isset($_SESSION['user_id']))
     <div class="tooltip-item">Move pin: <span class="tooltip-key">Up/Down Arrow</span></div>
   </div>
 
-  <div id="popup" style="display: none;">
-    <p id="popup-message"><?php echo $popupMsg ?></p>
-    <form action="" method="post">
+  <form action="" method="post" id="popupForm">
+    <div id="popup" style="display: none;">
+      <p id="popup-message"><?php echo $popupMsg ?></p>
       <input type="hidden" id="hidden-score" name="score" value="">
-      <button type="submit" id="popup-button" name="update_score">OK</button>
-    </form>
-  </div>
+      <button type="submit" id="popup-button" name="update_score">X</button>
+    </div>
+  </form>
   <script>
     let score = 0;
-    const locks = document.querySelectorAll('.lock');
-    const pick = document.getElementById('pick');
+    const locks = document.querySelectorAll(".lock");
+    const pick = document.getElementById("pick");
     let currentLockIndex = 0;
     let positions = [0, 0, 0];
     let sweetSpots = [];
     const tolerance = 5; // Tolerance na sweet spoty
-    let timeLeft = 5; // 60 seconds countdown
-    const timerElement = document.getElementById('timer');
+    let timeLeft = 20; // 60 seconds countdown
+    const timerElement = document.getElementById("timer");
+    let popupActive = false;
+    let form = document.getElementById('popupForm');
+    let scoreAdded = false;
 
     function endGame() {
-
-      const hiddenScoreInput = document.getElementById('hidden-score');
+      const hiddenScoreInput = document.getElementById("hidden-score");
       hiddenScoreInput.value = score;
 
-      const popup = document.getElementById('popup');
-      const messageElement = document.getElementById('popup-message');
-      popup.style.display = 'block';
+      const popup = document.getElementById("popup");
+      const messageElement = document.getElementById("popup-message");
+      if (!scoreAdded && isUserLoggedIn) {
+        messageElement.textContent += score;
+        scoreAdded = true;
+      }
+      console.log("test");
+      popup.style.display = "block";
+      popupActive = true;
     }
 
     function generateSweetSpots() {
@@ -284,7 +311,7 @@ if (isset($_SESSION['user_id']))
       score = 0;
       document.getElementById("score").innerHTML = score;
       resetLocks();
-      timeLeft = 5;
+      timeLeft = 20;
       timerElement.textContent = timeLeft;
     }
 
@@ -337,6 +364,15 @@ if (isset($_SESSION['user_id']))
             updatePickPosition();
           }
         }
+      } else if (e.key === "Escape") {
+        if (popupActive) {
+          popupActive = false; // Ensure popupActive is reset
+          const popup = document.getElementById("popup");
+          popup.style.display = "none"; // Hide the popup
+          resetGame();
+          location.reload(); // Reload the page
+        }
+
       }
     });
 

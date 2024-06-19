@@ -96,55 +96,25 @@ class Score {
         echo "</table>";
     }
 
-    public function getPlayerBestScore() {
-        if ($this->userId === null) {
-            return null;
-        }
+    public function getPlayerScore() 
+    {
+        
+        $result = $this->db->query("SELECT * FROM highscores WHERE user_id = ? AND game_id = ?", $this->userId, $this->gameId);
 
-        $result = $this->db->query("SELECT MAX(score) AS best_score FROM highscores WHERE game_id = ? AND user_id = ?", $this->gameId, $this->userId)->fetchArray();
-
-        if (isset($result['best_score'])) {
-            return $result['best_score'];
-        } else {
-            return null;
+        if ($result->numRows() > 0) 
+        {
+            // SKORE EXISTUJE -> RETURNE SE
+            return $result->fetchArray()['score'];
+        } else 
+        {
+            // SKORE NEEXISTUJE -> VYTVORI SE S HODNOTOU NULA A NULA SE I VRATI
+            $this->db->query("INSERT INTO highscores (user_id, game_id, score) VALUES (?, ?, 0)", $this->userId, $this->gameId);
+            return 0;
         }
     }
 
-    public function updatePlayerBestScore($newScore) {
-        if ($this->userId === null) {
-            return false;
-        }
-    
-        // Check if there is an existing score
-        $currentBestScore = $this->getPlayerBestScore();
-    
-        if ($currentBestScore === null) {
-            // Insert new score if none exists
-            $query = "
-                INSERT INTO highscores (game_id, user_id, score)
-                VALUES (?, ?, ?)
-            ";
-            $this->db->query($query, $this->gameId, $this->userId, $newScore);
-        } else if ($newScore > $currentBestScore) {
-            // Update score if the new score is higher
-            $query = "
-                UPDATE highscores
-                SET score = ?
-                WHERE game_id = ? AND user_id = ?
-            ";
-            $this->db->query($query, $newScore, $this->gameId, $this->userId);
-        }
-    
-        return true;
+    public function savePlayerScore($score)
+    {
+        $result = $this->db->query("UPDATE highscores SET score = ? WHERE user_id = ? AND game_id = ?", $score, $this->userId, $this->gameId);
     }
 }
-
-// Usage example:
-// $score = new Score(3, 1);  // for game_id 3 and user_id 1
-// $score->displayScoresTable();
-
-// To get the player's best score in a specific game:
-// $bestScore = $score->getPlayerBestScore();
-// echo $bestScore !== null ? "Player's best score: $bestScore" : "No score found for the player in this game";
-
-
