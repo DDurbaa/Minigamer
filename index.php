@@ -22,7 +22,9 @@ if (isset($_SESSION['user_id']))
 </head>
 <body>
     <header>
-        <div class="logo">MINIGAMER</div>
+        <div class="logo">
+            <img src="mlogo.png" alt="Minigamer Logo">
+        </div>
         <?php 
         if (!isset($_SESSION['user_id'])) 
         {
@@ -55,9 +57,9 @@ if (isset($_SESSION['user_id']))
                 </a>
             </div>
             <div class="card" id="fishing">
-                <a href="fishing.php">
+                <a href="#">
                     <div class="card-content">
-                        <h2>FISHING</h2>
+                        <h2>WORK IN PROGRESS</h2>
                     </div>
                 </a>
             </div>

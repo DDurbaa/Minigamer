@@ -64,9 +64,9 @@
                 </a>
             </div>
             <div class="card" id="random">
-                <a href="random.php">
+                <a href="#">
                     <div class="card-content">
-                        <h2>RANDOM</h2>
+                        <h2>WORK IN PROGRESS</h2>
                     </div>
                 </a>
             </div>
