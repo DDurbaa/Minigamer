@@ -85,12 +85,12 @@
     <div class="menu">
         <h1>MEDIEVAL</h1>
         <div class="buttons">
-            <a href="medievalendless.php" class="button">TIMED</a>
+            <a href="medievaltimed.php" class="button">TIMED</a>
             <a href="medievalendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
             <a href="#" class="button">HOW TO PLAY</a>
-            <a href="medieval-leaderboard.php" class="button">LEADERBOARD</a>
+            <a href="../lockpicking.php#leaderboard" class="button">LEADERBOARD</a>
             <a href="../lockpicking.php" class="buttonexit">EXIT</a>
         </div>
     </div>
