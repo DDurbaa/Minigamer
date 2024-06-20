@@ -85,7 +85,7 @@
     <div class="menu">
         <h1>SCHOOL</h1>
         <div class="buttons">
-            <a href="schoolendless.php" class="button">TIMED</a>
+            <a href="schooltimed.php" class="button">TIMED</a>
             <a href="schoolendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
