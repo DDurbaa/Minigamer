@@ -36,11 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </script>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../mlogo.png">
-    <title>Mayhem Hacking</title>
+    <title>Mayhem Timed</title>
     <style>
         body {
             display: flex;
@@ -51,14 +52,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             color: #00ff00;
             background-color: #1a1a1a;
             font-family: Arial, sans-serif;
-            overflow: hidden; /* Disable scrolling */
-            margin: 0; /* Remove default margin */
+            overflow: hidden;
+            /* Disable scrolling */
+            margin: 0;
+            /* Remove default margin */
         }
+
         #score {
-            position: fixed; /* Change to fixed */
-            bottom: 0; /* Stick to the bottom */
+            position: fixed;
+            /* Change to fixed */
+            bottom: 0;
+            /* Stick to the bottom */
             left: 50%;
-            transform: translateX(-50%); /* Center horizontally */
+            transform: translateX(-50%);
+            /* Center horizontally */
             color: white;
             font-size: 80px;
         }
@@ -80,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             background-color: #CD090F;
             color: #333;
         }
+
         #tooltip {
             position: absolute;
             bottom: 20px;
@@ -88,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             font-size: 26px;
             text-align: right;
         }
+
         .tooltip-item {
             margin: 5px 0;
         }
@@ -99,13 +108,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             display: inline-block;
             margin-left: 10px;
         }
+
         @keyframes greenGlow {
             0% {
                 box-shadow: 0 0 0 rgba(0, 255, 0, 0);
             }
+
             50% {
                 box-shadow: 0 0 20px rgba(0, 255, 0, 1);
             }
+
             100% {
                 box-shadow: 0 0 0 rgba(0, 255, 0, 0);
             }
@@ -154,10 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
     </style>
 </head>
+
 <body>
     <a href="mayhemmenu.php" class="buttonexit">EXIT</a>
     <div class="game-container">
-    <div id="timer">60</div>
+        <div id="timer">60</div>
         <canvas id="gameCanvas" width="700" height="700"></canvas> <!-- Zvýšení velikosti plátna -->
         <div id="tooltip">
             <div class="tooltip-item">Restart: <span class="tooltip-key">R</span></div>
@@ -165,12 +178,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         </div>
         <div class="score" id="score">0</div>
         <form action="" method="post" id="popupForm">
-        <div id="popup" style="display: none;">
-            <p id="popup-message"><?php echo $popupMsg ?></p>
-            <input type="hidden" id="hidden-score" name="score" value="">
-            <button type="submit" id="popup-button" name="update_score">X</button>
-        </div>
-    </form>
+            <div id="popup" style="display: none;">
+                <p id="popup-message"><?php echo $popupMsg ?></p>
+                <input type="hidden" id="hidden-score" name="score" value="">
+                <button type="submit" id="popup-button" name="update_score">X</button>
+            </div>
+        </form>
     </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -360,4 +373,5 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         gameLoop();
     </script>
 </body>
+
 </html>

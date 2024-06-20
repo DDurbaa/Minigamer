@@ -85,7 +85,7 @@
     <div class="menu">
         <h1>CYBERPUNK</h1>
         <div class="buttons">
-            <a href="cyberpunkendless.php" class="button">TIMED</a>
+            <a href="cyberpunktimed.php" class="button">TIMED</a>
             <a href="cyberpunkendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
