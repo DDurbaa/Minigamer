@@ -115,13 +115,17 @@
         const targetWidth = 0.2; // Zvýšená šířka cílového bodu
         let targetPoints = [];
         let currentAngle = 0;
-        let speed = 0.025; // Trochu zvýšená rychlost ukazatele
+        let speed = 0.05; // Zvýšení rychlosti ukazatele
         let hits = 0;
         let score = 0;
         let lastHitAngle = -Infinity; // Inicializace s hodnotou, která nemůže být dosažena
         const hitColors = ['#FF0', '#FF0', '#FF0'];
         const hitStatus = [false, false, false]; // Stav zásahu pro každý bod
         const hitGlows = [false, false, false]; // Glow effect status for each point
+
+        let lastTime = performance.now();
+        let spacePressed = false; // Stav pro stisknutí mezerníku
+        let spacePressTimeout = false; // Zamezení držení mezerníku
 
         function generateRandomAngles() {
             targetPoints = [];
@@ -228,11 +232,14 @@
             resetGame();
         }
 
-        function gameLoop() {
+        function gameLoop(currentTime) {
+            const deltaTime = (currentTime - lastTime) / 1000; // Calculate the time difference in seconds
+            lastTime = currentTime;
+
             drawCircle();
             drawTargetPoints();
             drawMovingIndicator();
-            currentAngle += speed;
+            currentAngle += speed * deltaTime * 60; // Scale the speed by deltaTime and FPS (assumed to be 60)
             if (currentAngle >= Math.PI * 2) {
                 currentAngle = 0;
             }
@@ -240,15 +247,20 @@
         }
 
         document.addEventListener('keydown', event => {
-            if (event.code === 'Space') {
+            if (event.code === 'Space' && !spacePressTimeout) {
                 checkHit();
+                spacePressTimeout = true; // Zamezení držení mezerníku
+                setTimeout(() => {
+                    spacePressTimeout = false; // Obnovit možnost stisku mezerníku po 300ms
+                }, 300);
             } else if (event.code === 'KeyR') {
                 resetAll();
             }
         });
 
         generateRandomAngles();
-        gameLoop();
+        gameLoop(lastTime);
     </script>
 </body>
 </html>
+

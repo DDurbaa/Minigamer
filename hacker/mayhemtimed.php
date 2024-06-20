@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <a href="mayhemmenu.php" class="buttonexit">EXIT</a>
     <div class="game-container">
         <div id="timer">60</div>
-        <canvas id="gameCanvas" width="700" height="700"></canvas> <!-- Zvýšení velikosti plátna -->
+        <canvas id="gameCanvas" width="700" height="700"></canvas>
         <div id="tooltip">
             <div class="tooltip-item">Restart: <span class="tooltip-key">R</span></div>
             <div class="tooltip-item">Select: <span class="tooltip-key">Space</span></div>
@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <div id="popup" style="display: none;">
                 <p id="popup-message"><?php echo $popupMsg ?></p>
                 <input type="hidden" id="hidden-score" name="score" value="">
-                <button type="submit" id="popup-button" name="update_score">X</button>
+                <button type="submit" id="popup-button" name="update_score">OK</button>
             </div>
         </form>
     </div>
@@ -196,17 +196,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         const targetWidth = 0.2; // Zvýšená šířka cílového bodu
         let targetPoints = [];
         let currentAngle = 0;
-        let speed = 0.025; // Trochu zvýšená rychlost ukazatele
+        let speed = 0.05; // Zvýšení rychlosti ukazatele
         let hits = 0;
         let score = 0;
         let lastHitAngle = -Infinity; // Inicializace s hodnotou, která nemůže být dosažena
         const hitColors = ['#FF0', '#FF0', '#FF0'];
         const hitStatus = [false, false, false]; // Stav zásahu pro každý bod
         const hitGlows = [false, false, false]; // Glow effect status for each point
+
+        let lastTime = performance.now();
+        let spacePressed = false; // Stav pro stisknutí mezerníku
+        let spacePressTimeout = false; // Zamezení držení mezerníku
         let timeLeft = 60; // 60 seconds countdown
         const timerElement = document.getElementById("timer");
         let popupActive = false;
-        let form = document.getElementById('popupForm');
         let scoreAdded = false;
 
         function endGame() {
@@ -304,8 +307,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         function checkHit() {
-            const minDistanceAfterHit = 0.5; // Minimální vzdálenost od posledního zásahu
-
             for (let i = 0; i < targetPoints.length; i++) {
                 if (!hitStatus[i] && Math.abs(currentAngle - targetPoints[i]) < targetWidth) {
                     hitColors[i] = '#0F0'; // Změnit barvu na zelenou při zásahu
@@ -342,11 +343,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             resetGame();
         }
 
-        function gameLoop() {
+        function gameLoop(currentTime) {
+            const deltaTime = (currentTime - lastTime) / 1000; // Calculate the time difference in seconds
+            lastTime = currentTime;
+
             drawCircle();
             drawTargetPoints();
             drawMovingIndicator();
-            currentAngle += speed;
+            currentAngle += speed * deltaTime * 60; // Scale the speed by deltaTime and FPS (assumed to be 60)
             if (currentAngle >= Math.PI * 2) {
                 currentAngle = 0;
             }
@@ -354,23 +358,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         document.addEventListener('keydown', event => {
-            if (event.code === 'Space') {
+            if (event.code === 'Space' && !spacePressTimeout) {
                 checkHit();
+                spacePressTimeout = true; // Zamezení držení mezerníku
+                setTimeout(() => {
+                    spacePressTimeout = false; // Obnovit možnost stisku mezerníku po 300ms
+                }, 300);
             } else if (event.code === 'KeyR') {
                 resetAll();
-            } else if (event.key === "Escape") {
-                if (popupActive) {
-                    popupActive = false;
-                    const popup = document.getElementById("popup");
-                    popup.style.display = "none";
-                    form.submit();
-                    location.reload();
-                }
             }
         });
 
         generateRandomAngles();
-        gameLoop();
+        gameLoop(lastTime);
     </script>
 </body>
 
