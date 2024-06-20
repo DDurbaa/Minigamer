@@ -102,8 +102,8 @@ if (isset($_SESSION['user_id']))
     <main>
         <div class="description">
         <h1>Verify Your Account To Proceed!</h1>
-        <p>A verification e-mail has been sent to <?php echo $masked_email ?>.</p>
-            <a href="index.php">RELOAD</a>
+        <p>a verification e-mail has been sent to <?php echo $masked_email ?></p>
+            <a href="index.php">RETRY</a>
         </div>
     </main>
     
