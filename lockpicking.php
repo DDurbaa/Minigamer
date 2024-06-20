@@ -54,7 +54,7 @@
                     </div>
                 </a>
             </div>
-            <div class="card" id="wasteland">
+            <div class="card" id="school">
                 <a href="lockpicker/schoolmenu.php">
                     <div class="card-content">
                         <h2>SCHOOL</h2>

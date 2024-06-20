@@ -189,7 +189,7 @@ main {
 }
 
 #hacking {
-    background-image: url('hacking.png');
+    background-image: url('cyberpunk.png');
     background-size: cover;
     background-position: center;
 }
@@ -254,14 +254,14 @@ main {
     background-image: url('mafia.gif'); 
 }
 
-#wasteland {
-    background-image: url('wasteland.png');
+#school {
+    background-image: url('school.png');
     background-size: cover;
     background-position: center;
 }
 
-#wasteland:hover {
-    background-image: url('wasteland.gif'); 
+#school:hover {
+    background-image: url('school.gif'); 
 }
 #random {
     background-image: url('random.png');
@@ -275,7 +275,7 @@ main {
 
 #medieval::before,
 #mafia::before,
-#wasteland::before,
+#school::before,
 #random::before {
     content: '';
     position: absolute;
