@@ -385,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         } else if (event.code === 'KeyR') {
           resetGame(); // Kompletní reset hry při stisknutí R
         }
-        else if (e.key === "Escape") {
+        else if (event.key === "Escape") {
                 if (popupActive) {
                     popupActive = false;
                     const popup = document.getElementById("popup");

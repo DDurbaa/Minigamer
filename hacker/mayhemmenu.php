@@ -85,7 +85,7 @@
     <div class="menu">
         <h1>MAYHEM</h1>
         <div class="buttons">
-            <a href="mayhemendless.php" class="button">TIMED</a>
+            <a href="mayhemtimed.php" class="button">TIMED</a>
             <a href="mayhemendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
