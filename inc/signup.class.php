@@ -221,7 +221,7 @@ class Signup
                         <div class="button-container">
                             <a href="http://localhost/Minigamer/Lockpicker/verify-email.php?t=' . urlencode($token) . '">Confirm Email</a>
                         </div>
-                        <p class="content-text">Thanks,</p>
+                        <p class="content-text">Do not reply to this e-mail</p>
                         <p class="content-text">The Minigamer Team</p>
                     </div>
                 </div>
@@ -269,6 +269,131 @@ class Signup
         $minLength = 8;
 
         return strlen($password) >= $minLength;
+    }
+
+    public function sendPasswordResetEmail($email)
+    {
+        $mail = new PHPMailer(true);
+        $expFormat = mktime(
+            date("H"), date("i"), date("s"), date("m") ,date("d")+1, date("Y")
+            );
+            $expDate = date("Y-m-d H:i:s",$expFormat);
+            $key = md5(2418*2 . $email);
+            $addKey = substr(md5(uniqid(rand(),1)),3,10);
+            $key = $key . $addKey;
+            $DB = new DB();
+            $DB->query("INSERT INTO `password_reset_temp` (`email`, `key`, `expDate`) VALUES (?, ?, ?)", $email, $key, $expDate);
+    
+        try {
+            // Nastavení serveru
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'simonecek2005@gmail.com'; // EMAIL ODESILATELE
+            $mail->Password = 'tjyjwahhqikfijmd'; // HESLO (HESLO APLIKACE KDYZ 2FA)
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+    
+            // Nastavení odesílatele a příjemce
+            $mail->setFrom('simonecek2005@gmail.com', 'Minigamer'); 
+            $mail->addAddress($email); 
+            $mail->Subject = 'Minigamer - Password recovery';
+            
+            // Tělo zprávy v HTML formátu
+            $mail->isHTML(true);
+    
+            // Vložení HTML šablony do těla zprávy
+            $body = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Password recovery</title>
+                <style>
+                    body {
+                        margin: 0;
+                        font-family: Arial, sans-serif;
+                        background-color: #000000; /* Set the background to black */
+                        color: #ffffff;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        padding: 20px; /* Add some padding */
+                    }
+    
+                    .container {
+                        max-width: 600px;
+                        margin: 20px;
+                        padding: 20px;
+                        background-color: #1e1e1e;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                    }
+    
+                    .logo-container {
+                        text-align: center;
+                        padding-bottom: 20px;
+                    }
+    
+                    .logo-container img {
+                        width: 150px;
+                    }
+    
+                    .welcome-text {
+                        text-align: center;
+                        color: #ffcc00;
+                    }
+    
+                    .content-text {
+                        font-size: 1.2em;
+                        color: #ffffff; /* Text color set to white */
+                    }
+    
+                    .button-container {
+                        text-align: center;
+                    }
+    
+                    .button-container a {
+                        background-color: #1d1d1dfc;
+                        color: white;
+                        padding: 15px 30px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        border: 2px solid #ffcc00;
+                        border-radius: 5px;
+                        font-size: 1.2em;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="logo-container">
+                        <img src="https://vanek-josef.mzf.cz/mlogo.png" alt="Logo">
+                    </div>
+                    <div class="text-container">
+                        <h2 class="welcome-text">Dear user</h2>
+                        <p class="content-text">click on the following link to reset your password: <br></p>
+                        <div class="button-container">
+                            <a href="http://localhost/Minigamer/Lockpicker/reset-password.php?k=' . urlencode($key) . '&email='.$email.'&action=reset" target="_blank">Reset password</a>
+                        </div>
+                        <p class="content-text">If you did not request this, you can ignore this e-mail.</p>
+                        <p class="content-text">Do not reply to this e-mail</p>
+                        <p class="content-text">The Minigamer Team</p>
+                    </div>
+                </div>
+            </body>
+            </html>';
+    
+            $mail->Body = $body;
+    
+            // Odeslání e-mailu
+            $mail->send();
+        } catch (Exception $e) {
+            echo 'Failed to send password recovery email. Error: ' . $mail->ErrorInfo;
+        }
     }
 }
 

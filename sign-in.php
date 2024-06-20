@@ -71,6 +71,7 @@ if ($section == 'login' && isset($_POST['email'])) {
             <span class='checkbox-custom'></span>
             Remember Me
         </label>
+        <a href='forgot-password.php'>Forgot your password?</a>
         <input type='submit' value='Login' class='submit-btn'>
     </form>";
 } elseif ($section == 'register' && isset($_POST['email'])) {
