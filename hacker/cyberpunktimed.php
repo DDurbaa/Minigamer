@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 
 ?>
@@ -315,19 +316,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 const rowMaxDup = 1;
                 const colMaxDup = 1;
 
+                function isValidPlacement(row, col, code) {
+                    const rowCount = grid[row].filter(c => c === code).length;
+                    const colCount = grid.map(r => r[col]).filter(c => c === code).length;
+                    return rowCount <= rowMaxDup && colCount <= colMaxDup && counts[code] < maxCount;
+                }
+
+                function placeCode(row, col) {
+                    const availableCodes = codes.filter(code => isValidPlacement(row, col, code));
+                    if (availableCodes.length === 0) {
+                        return false;
+                    }
+                    const code = availableCodes[Math.floor(Math.random() * availableCodes.length)];
+                    grid[row][col] = code;
+                    counts[code]++;
+                    return true;
+                }
+
                 for (let row = 0; row < 4; row++) {
                     for (let col = 0; col < 4; col++) {
-                        const availableCodes = codes.filter(code => counts[code] < maxCount &&
-                            grid[row].filter(c => c === code).length <= rowMaxDup &&
-                            grid.map(r => r[col]).filter(c => c === code).length <= colMaxDup);
-
-                        if (availableCodes.length === 0) {
-                            throw new Error('Failed to generate valid grid');
+                        if (!placeCode(row, col)) {
+                            return generateRandomMatrix(); // Restart if placement fails
                         }
-
-                        const code = availableCodes[Math.floor(Math.random() * availableCodes.length)];
-                        grid[row][col] = code;
-                        counts[code]++;
                     }
                 }
 
@@ -510,14 +520,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     if (event.key === 'r') {
                         resetAll();
                     } else if (event.key === "Escape") {
-                if (popupActive) {
-                    popupActive = false;
-                    const popup = document.getElementById("popup");
-                    popup.style.display = "none";
-                    form.submit();
-                    location.reload();
-                }
-            }
+                        if (popupActive) {
+                            popupActive = false;
+                            const popup = document.getElementById("popup");
+                            popup.style.display = "none";
+                            form.submit();
+                            location.reload();
+                        }
+                    }
                 });
             }
 

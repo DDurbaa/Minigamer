@@ -181,232 +181,243 @@
     </div>
     <div class="score" id="score">0</div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const codeMatrix = document.querySelector('.code-matrix');
-            const sequenceContainer = document.querySelector('.sequence');
-            const bufferCells = document.querySelectorAll('.buffer-cell');
-            const scoreElement = document.getElementById('score');
-            const codes = ['BD', '1C', '55', 'E9'];
-            let bufferIndex = 0;
-            let isHorizontal = true;
-            let currentRow, currentCol;
-            let isFirstSelection = true;
-            let currentSequence = [];
-            let sequences = [];
-            let score = 0;
+       document.addEventListener('DOMContentLoaded', () => {
+    const codeMatrix = document.querySelector('.code-matrix');
+    const sequenceContainer = document.querySelector('.sequence');
+    const bufferCells = document.querySelectorAll('.buffer-cell');
+    const scoreElement = document.getElementById('score');
+    const codes = ['BD', '1C', '55', 'E9'];
+    let bufferIndex = 0;
+    let isHorizontal = true;
+    let currentRow, currentCol;
+    let isFirstSelection = true;
+    let currentSequence = [];
+    let sequences = [];
+    let score = 0;
 
-            function shuffle(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function isValidGrid(grid) {
+        const counts = { BD: 0, '1C': 0, '55': 0, E9: 0 };
+        const rowMaxDup = 1;
+        const colMaxDup = 1;
+        const maxCount = 4;
+
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 4; col++) {
+                const code = grid[row][col];
+                counts[code]++;
+                if (counts[code] > maxCount ||
+                    grid[row].filter(c => c === code).length > rowMaxDup ||
+                    grid.map(r => r[col]).filter(c => c === code).length > colMaxDup) {
+                    return false;
                 }
             }
+        }
 
-            function generateRandomMatrix() {
-                const grid = Array.from({ length: 4 }, () => Array(4).fill(null));
-                const counts = { BD: 0, '1C': 0, '55': 0, E9: 0 };
-                const maxCount = 4;
-                const rowMaxDup = 1;
-                const colMaxDup = 1;
+        return true;
+    }
 
-                for (let row = 0; row < 4; row++) {
-                    for (let col = 0; col < 4; col++) {
-                        const availableCodes = codes.filter(code => counts[code] < maxCount &&
-                            grid[row].filter(c => c === code).length <= rowMaxDup &&
-                            grid.map(r => r[col]).filter(c => c === code).length <= colMaxDup);
+    function generateRandomMatrix() {
+        const grid = Array.from({ length: 4 }, () => Array(4).fill(null));
+        const availableCodes = Array.from({ length: 16 }, (_, index) => codes[index % 4]);
+        shuffle(availableCodes);
 
-                        if (availableCodes.length === 0) {
-                            throw new Error('Failed to generate valid grid');
-                        }
-
-                        const code = availableCodes[Math.floor(Math.random() * availableCodes.length)];
-                        grid[row][col] = code;
-                        counts[code]++;
-                    }
-                }
-
-                return grid.flat();
+        let index = 0;
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 4; col++) {
+                grid[row][col] = availableCodes[index++];
             }
+        }
 
-            function generateRandomSequences() {
-                const sequences = [];
-                for (let i = 0; i < 3; i++) {
-                    const seqLength = Math.floor(Math.random() * 2) + 2; // Délka sekvence mezi 2 a 3
-                    const sequence = [];
-                    for (let j = 0; j < seqLength; j++) {
-                        sequence.push(codes[Math.floor(Math.random() * codes.length)]);
-                    }
-                    sequences.push(sequence);
-                }
-                return sequences;
+        return grid.flat();
+    }
+
+    function generateRandomSequences() {
+        const sequences = [];
+        for (let i = 0; i < 3; i++) {
+            const seqLength = Math.floor(Math.random() * 2) + 2; // Délka sekvence mezi 2 a 3
+            const sequence = [];
+            for (let j = 0; j < seqLength; j++) {
+                sequence.push(codes[Math.floor(Math.random() * codes.length)]);
             }
+            sequences.push(sequence);
+        }
+        return sequences;
+    }
 
-            function createMatrix(matrix) {
-                codeMatrix.innerHTML = '';
-                matrix.forEach((code, index) => {
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-                    cell.setAttribute('data-value', code);
-                    cell.textContent = code;
-                    codeMatrix.appendChild(cell);
-                });
-            }
-
-            function createSequences(sequences) {
-                sequenceContainer.innerHTML = '';
-                sequences.forEach((sequence, index) => {
-                    const sequenceDiv = document.createElement('div');
-                    sequenceDiv.classList.add('sequence-required');
-                    sequenceDiv.setAttribute('data-sequence', sequence.join(' '));
-                    sequenceDiv.setAttribute('data-index', index);
-                    sequenceDiv.textContent = sequence.join(' ');
-                    sequenceContainer.appendChild(sequenceDiv);
-                });
-            }
-
-            function checkSequences() {
-                const sequencesDivs = document.querySelectorAll('.sequence-required');
-                sequencesDivs.forEach(sequenceDiv => {
-                    const sequence = sequenceDiv.getAttribute('data-sequence').split(' ');
-                    if (currentSequence.join(' ').includes(sequence.join(' '))) {
-                        if (!sequenceDiv.classList.contains('sequence-completed')) {
-                            sequenceDiv.classList.add('sequence-completed');
-                            score++;
-                            scoreElement.textContent = score;
-                        }
-                    }
-                });
-
-                // Zkontrolovat, zda jsou všechny sekvence splněny
-                const allCompleted = Array.from(sequencesDivs).every(sequenceDiv =>
-                    sequenceDiv.classList.contains('sequence-completed')
-                );
-
-                // Restartovat hru, pokud jsou všechny sekvence splněny nebo je buffer plný
-                if (allCompleted || bufferIndex >= bufferCells.length) {
-                    setTimeout(resetGame, 1000); // Krátká prodleva před restartem
-                }
-            }
-
-            function updateSelectableCells() {
-                const cells = document.querySelectorAll('.cell');
-                cells.forEach(cell => cell.classList.remove('selectable', 'highlight', 'not-selectable'));
-
-                if (isHorizontal) {
-                    for (let col = 0; col < 4; col++) {
-                        const cell = document.querySelector(`.code-matrix .cell:nth-child(${currentRow * 4 + col + 1})`);
-                        cell.classList.add('selectable', 'highlight');
-                    }
-                } else {
-                    for (let row = 0; row < 4; row++) {
-                        const cell = document.querySelector(`.code-matrix .cell:nth-child(${row * 4 + currentCol + 1})`);
-                        cell.classList.add('selectable', 'highlight');
-                    }
-                }
-            }
-
-            function highlightRowOrColumn(row, col) {
-                const cells = document.querySelectorAll('.cell');
-                cells.forEach(cell => cell.classList.remove('highlight'));
-                if (isHorizontal) {
-                    for (let c = 0; c < 4; c++) {
-                        const cell = document.querySelector(`.code-matrix .cell:nth-child(${row * 4 + c + 1})`);
-                        cell.classList.add('highlight');
-                    }
-                } else {
-                    for (let r = 0; r < 4; r++) {
-                        const cell = document.querySelector(`.code-matrix .cell:nth-child(${r * 4 + col + 1})`);
-                        cell.classList.add('highlight');
-                    }
-                }
-            }
-
-            function resetGame() {
-                bufferIndex = 0;
-                isHorizontal = true;
-                isFirstSelection = true;
-                currentSequence = [];
-                sequences = generateRandomSequences();
-                createMatrix(generateRandomMatrix());
-                createSequences(sequences);
-                const cells = document.querySelectorAll('.cell');
-                cells.forEach(cell => {
-                    cell.classList.remove('selected', 'highlight', 'not-selectable');
-                    cell.classList.add('selectable');
-                });
-                bufferCells.forEach(bufferCell => bufferCell.innerText = '');
-
-                // Znovu připojit event listenery
-                attachEventListeners();
-            }
-
-            function resetAll() {
-                score = 0;
-                scoreElement.textContent = score;
-                resetGame();
-            }
-
-            function attachEventListeners() {
-                const cells = document.querySelectorAll('.cell');
-
-                cells.forEach((cell, index) => {
-                    const row = Math.floor(index / 4);
-                    const col = index % 4;
-
-                    cell.addEventListener('mouseover', () => {
-                        if (isFirstSelection) {
-                            highlightRowOrColumn(row, col);
-                        } else if (!cell.classList.contains('selectable')) {
-                            cell.classList.add('not-selectable');
-                        }
-                    });
-
-                    cell.addEventListener('mouseout', () => {
-                        if (isFirstSelection) {
-                            cells.forEach(cell => cell.classList.remove('highlight'));
-                        } else {
-                            cell.classList.remove('not-selectable');
-                        }
-                    });
-
-                    cell.addEventListener('click', () => {
-                        if (cell.classList.contains('selectable') || isFirstSelection) {
-                            bufferCells[bufferIndex].innerText = cell.dataset.value;
-                            bufferIndex++;
-                            isHorizontal = !isHorizontal;
-                            currentRow = row;
-                            currentCol = col;
-
-                            cell.classList.add('selected');
-
-                            currentSequence.push(cell.dataset.value);
-                            checkSequences();
-
-                            isFirstSelection = false;
-
-                            if (bufferIndex < bufferCells.length) {
-                                updateSelectableCells();
-                            }
-                        }
-                    });
-                });
-
-                // Umožnit první výběr na jakémkoli řádku nebo sloupci
-                cells.forEach(cell => cell.classList.add('selectable'));
-            }
-
-            function init() {
-                resetGame();
-
-                document.addEventListener('keydown', (event) => {
-                    if (event.key === 'r') {
-                        resetAll();
-                    }
-                });
-            }
-
-            init();
+    function createMatrix(matrix) {
+        codeMatrix.innerHTML = '';
+        matrix.forEach((code, index) => {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.setAttribute('data-value', code);
+            cell.textContent = code;
+            codeMatrix.appendChild(cell);
         });
+    }
+
+    function createSequences(sequences) {
+        sequenceContainer.innerHTML = '';
+        sequences.forEach((sequence, index) => {
+            const sequenceDiv = document.createElement('div');
+            sequenceDiv.classList.add('sequence-required');
+            sequenceDiv.setAttribute('data-sequence', sequence.join(' '));
+            sequenceDiv.setAttribute('data-index', index);
+            sequenceDiv.textContent = sequence.join(' ');
+            sequenceContainer.appendChild(sequenceDiv);
+        });
+    }
+
+    function checkSequences() {
+        const sequencesDivs = document.querySelectorAll('.sequence-required');
+        sequencesDivs.forEach(sequenceDiv => {
+            const sequence = sequenceDiv.getAttribute('data-sequence').split(' ');
+            if (currentSequence.join(' ').includes(sequence.join(' '))) {
+                if (!sequenceDiv.classList.contains('sequence-completed')) {
+                    sequenceDiv.classList.add('sequence-completed');
+                    score++;
+                    scoreElement.textContent = score;
+                }
+            }
+        });
+
+        // Zkontrolovat, zda jsou všechny sekvence splněny
+        const allCompleted = Array.from(sequencesDivs).every(sequenceDiv =>
+            sequenceDiv.classList.contains('sequence-completed')
+        );
+
+        // Restartovat hru, pokud jsou všechny sekvence splněny nebo je buffer plný
+        if (allCompleted || bufferIndex >= bufferCells.length) {
+            setTimeout(resetGame, 1000); // Krátká prodleva před restartem
+        }
+    }
+
+    function updateSelectableCells() {
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach(cell => cell.classList.remove('selectable', 'highlight', 'not-selectable'));
+
+        if (isHorizontal) {
+            for (let col = 0; col < 4; col++) {
+                const cell = document.querySelector(`.code-matrix .cell:nth-child(${currentRow * 4 + col + 1})`);
+                cell.classList.add('selectable', 'highlight');
+            }
+        } else {
+            for (let row = 0; row < 4; row++) {
+                const cell = document.querySelector(`.code-matrix .cell:nth-child(${row * 4 + currentCol + 1})`);
+                cell.classList.add('selectable', 'highlight');
+            }
+        }
+    }
+
+    function highlightRowOrColumn(row, col) {
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach(cell => cell.classList.remove('highlight'));
+        if (isHorizontal) {
+            for (let c = 0; c < 4; c++) {
+                const cell = document.querySelector(`.code-matrix .cell:nth-child(${row * 4 + c + 1})`);
+                cell.classList.add('highlight');
+            }
+        } else {
+            for (let r = 0; r < 4; r++) {
+                const cell = document.querySelector(`.code-matrix .cell:nth-child(${r * 4 + col + 1})`);
+                cell.classList.add('highlight');
+            }
+        }
+    }
+
+    function resetGame() {
+        bufferIndex = 0;
+        isHorizontal = true;
+        isFirstSelection = true;
+        currentSequence = [];
+        sequences = generateRandomSequences();
+        createMatrix(generateRandomMatrix());
+        createSequences(sequences);
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach(cell => {
+            cell.classList.remove('selected', 'highlight', 'not-selectable');
+            cell.classList.add('selectable');
+        });
+        bufferCells.forEach(bufferCell => bufferCell.innerText = '');
+
+        // Znovu připojit event listenery
+        attachEventListeners();
+    }
+
+    function resetAll() {
+        score = 0;
+        scoreElement.textContent = score;
+        resetGame();
+    }
+
+    function attachEventListeners() {
+        const cells = document.querySelectorAll('.cell');
+
+        cells.forEach((cell, index) => {
+            const row = Math.floor(index / 4);
+            const col = index % 4;
+
+            cell.addEventListener('mouseover', () => {
+                if (isFirstSelection) {
+                    highlightRowOrColumn(row, col);
+                } else if (!cell.classList.contains('selectable')) {
+                    cell.classList.add('not-selectable');
+                }
+            });
+
+            cell.addEventListener('mouseout', () => {
+                if (isFirstSelection) {
+                    cells.forEach(cell => cell.classList.remove('highlight'));
+                } else {
+                    cell.classList.remove('not-selectable');
+                }
+            });
+
+            cell.addEventListener('click', () => {
+                if (cell.classList.contains('selectable') || isFirstSelection) {
+                    bufferCells[bufferIndex].innerText = cell.dataset.value;
+                    bufferIndex++;
+                    isHorizontal = !isHorizontal;
+                    currentRow = row;
+                    currentCol = col;
+
+                    cell.classList.add('selected');
+
+                    currentSequence.push(cell.dataset.value);
+                    checkSequences();
+
+                    isFirstSelection = false;
+
+                    if (bufferIndex < bufferCells.length) {
+                        updateSelectableCells();
+                    }
+                }
+            });
+        });
+
+        // Umožnit první výběr na jakémkoli řádku nebo sloupci
+        cells.forEach(cell => cell.classList.add('selectable'));
+    }
+
+    function init() {
+        resetGame();
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'r') {
+                resetAll();
+            }
+        });
+    }
+
+    init();
+});
+
 
     </script>
 </body>
