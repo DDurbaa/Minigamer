@@ -3,11 +3,17 @@
     include "inc/loader.php";
 
     $Login = new Login();
+    $ScoreCP = new Score(4);
+    $ScoreUtopia = new Score(5);
+    $ScoreMayhem = new Score(6);
     $Login->checkRememberMe();
 
     if (isset($_SESSION['user_id']))
     {
         $Login->checkVerification($_SESSION['user_id']);
+        $ScoreCP = new Score(4, $_SESSION['user_id']);
+        $ScoreUtopia = new Score(5, $_SESSION['user_id']);
+        $ScoreMayhem = new Score(6, $_SESSION['user_id']);
     }
     
 
@@ -20,6 +26,28 @@
     <link rel="icon" href="mlogo.png">
     <title>Hacker</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+    .leaderboards {
+        display: flex;
+        justify-content: space-between;
+        color: #00ff00;
+    }
+    .score-table {
+        margin: 10px;
+    }
+    .score-table h2 {
+        text-align: center;
+    }
+    .score-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .score-table th, .score-table td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+</style>
 </head>
 <body>
     <header>
@@ -68,5 +96,12 @@
             </div>
         </div>
     </main>
+    <div class="leaderboards">
+        <?php 
+            $ScoreCP->displayScoresTable("Cyberpunk");
+            $ScoreUtopia->displayScoresTable("Utopia");
+            $ScoreMayhem->displayScoresTable("Mayhem");
+        ?>
+    </div>
 </body>
 </html>

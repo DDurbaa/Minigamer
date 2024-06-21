@@ -75,25 +75,30 @@ class Score {
         return ['topScores' => $topScores];
     }
 
-    public function displayScoresTable() {
+    public function displayScoresTable($title) {
         $result = $this->getTopScoresWithPlayerRank();
         $topScores = $result['topScores'];
         $playerRank = $result['playerRank'] ?? null;
 
-        // Display table
-        echo "<table border='1'>";
-        echo "<tr><th>Rank</th><th>Username</th><th>Score</th></tr>";
-        $rank = 1;
-        foreach ($topScores as $score) {
-            echo "<tr><td>{$rank}</td><td>{$score['username']}</td><td>{$score['score']}</td></tr>";
-            $rank++;
-        }
+        // Display title
+    echo "<div class='score-table'>";
+    echo "<h2>{$title}</h2>";
 
-        if ($playerRank) {
-            echo "<tr><td>{$playerRank['rank']}</td><td>{$playerRank['username']}</td><td>{$playerRank['score']}</td></tr>";
-        }
+    // Display table
+    echo "<table border='1'>";
+    echo "<tr><th>Rank</th><th>Username</th><th>Score</th></tr>";
+    $rank = 1;
+    foreach ($topScores as $score) {
+        echo "<tr><td>{$rank}</td><td>{$score['username']}</td><td>{$score['score']}</td></tr>";
+        $rank++;
+    }
 
-        echo "</table>";
+    if ($playerRank) {
+        echo "<tr><td>{$playerRank['rank']}</td><td>{$playerRank['username']}</td><td>{$playerRank['score']}</td></tr>";
+    }
+
+    echo "</table>";
+    echo "</div>";
     }
 
     public function getPlayerScore() 
