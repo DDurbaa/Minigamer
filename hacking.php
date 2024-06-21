@@ -2,7 +2,7 @@
 
     include "inc/loader.php";
 
-    $Login = new Login();
+    $Login = new Login();session_start();
     $ScoreCP = new Score(4);
     $ScoreUtopia = new Score(5);
     $ScoreMayhem = new Score(6);

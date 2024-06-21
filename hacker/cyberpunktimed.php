@@ -2,7 +2,7 @@
 
 include "../inc/loader.php";
 
-$Login = new Login();
+$Login = new Login();session_start();
 $Login->checkRememberMe();
 $popupMsg = "Sign in to save your score!";
 $gameScore = "";

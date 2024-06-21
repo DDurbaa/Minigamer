@@ -1,7 +1,7 @@
 <?php
 include "inc/loader.php";
 
-$Login = new Login();
+$Login = new Login();session_start();
 $Login->checkRememberMe();
 
 if (isset($_SESSION['user_id'])) 
