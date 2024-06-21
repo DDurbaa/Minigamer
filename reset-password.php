@@ -65,7 +65,7 @@ if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "u
         $DB->query("DELETE FROM `password_reset_temp` WHERE `email`=?", $email);
 
         $msg = '<div class="success"><p>Congratulations! Your password has been updated successfully.</p>
-                <p><a href="sign-in.php">Click here</a> to Login.</p></div><br />';
+                <p><a href="sign-in.php" class="button-link">Login</a></p></div>';
     }
 }
 
@@ -114,7 +114,7 @@ if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "u
         .input-field:focus {
             border-color: <?php echo $selected_color; ?>;
         }
-        .submit-btn {
+        .submit-btn, .button-link {
             background-color: #2a2a2a;
             width: 100%;
             padding: 15px;
@@ -127,10 +127,12 @@ if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "u
             cursor: pointer;
             box-sizing: border-box;
             font-size: 18px;
+            text-align: center;
+            display: block;
             transition: background-color 0.3s, color 0.3s;
             margin-top: 10px;
         }
-        .submit-btn:hover {
+        .submit-btn:hover, .button-link:hover {
             background-color: <?php echo $selected_color; ?>;
             color: #333;
         }
