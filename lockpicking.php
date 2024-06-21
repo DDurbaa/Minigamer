@@ -27,27 +27,41 @@
     <title>Lockpicker</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-    .leaderboards {
-        display: flex;
-        justify-content: space-between;
-        color: #ffcc00;
-    }
-    .score-table {
-        margin: 10px;
-    }
-    .score-table h2 {
-        text-align: center;
-    }
-    .score-table table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .score-table th, .score-table td {
-        padding: 8px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-</style>
+        .leaderboards {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Přidáno pro rozestupy mezi tabulkami */
+            color: #ffcc00;
+            margin-top: 20px; /* Přidáno pro vizuální rozestup mezi kartami a tabulkami */
+        }
+
+        .score-table {
+            width: 400px; /* Šířka tabulek stejná jako karty */
+            background-color: transparent; /* Odstranění pozadí */
+            border-radius: 10px;
+            box-shadow: none; /* Odstranění stínu */
+            margin: 0 20px; /* Přidáno pro vizuální rozestup mezi tabulkami */
+        }
+
+        .score-table h2 {
+            text-align: center;
+            color: #ffcc00;
+        }
+
+        .score-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .score-table th, .score-table td {
+            padding: 12px; /* Zvětšení paddingu pro větší text */
+            text-align: left;
+            border: 1px solid #ffcc00; /* Změna barvy ohraničení na žlutou */
+            color: white; /* Změna barvy textu na bílou */
+            border-radius: 5px; /* Zaoblení rohů */
+            font-size: 18px; /* Zvětšení velikosti textu */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -105,3 +119,4 @@
     </div>
 </body>
 </html>
+
