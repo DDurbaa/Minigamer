@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id']))
     $result = $DB->query("SELECT verified, email FROM users WHERE id = ? LIMIT 1", $_SESSION['user_id']);
     $user = $result->fetchArray();
 
-    if ($user['verified'] == 2) 
+    if ($user['verified'] == 1) 
     {
         header("Location: index.php");
         exit();
