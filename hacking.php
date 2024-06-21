@@ -28,11 +28,11 @@
         <?php 
         if (!isset($_SESSION['user_id'])) 
         {
-            echo "<a href='sign-in.php' class='buttonsignin'>SIGN IN</a>";
+            echo "<a href='sign-in.php' class='buttonsigninhacking'>SIGN IN</a>";
         }
         else 
         {
-            echo "<a href='log-out.php' class='buttonsignin'>LOGOUT</a>";
+            echo "<a href='log-out.php' class='buttonsigninhacking'>LOGOUT</a>";
         }
         ?>
     </header>

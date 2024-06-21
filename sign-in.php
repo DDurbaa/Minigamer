@@ -66,12 +66,12 @@ if ($section == 'login' && isset($_POST['email'])) {
         <input type='email' name='email' value='$email' readonly class='input-field'>
         <input type='hidden' name='email' value='$email'>
         <input type='password' name='password' required placeholder='Password' class='input-field'>
+        <a href='forgot-password.php' class='forgot-password-link'>Forgot your password?</a>
         <label class='checkbox-label'>
             <input type='checkbox' name='remember_me' class='checkbox-input'>
             <span class='checkbox-custom'></span>
             Remember Me
         </label>
-        <a href='forgot-password.php'>Forgot your password?</a>
         <input type='submit' value='Login' class='submit-btn'>
     </form>";
 } elseif ($section == 'register' && isset($_POST['email'])) {
@@ -158,7 +158,7 @@ if ($section == 'login' && isset($_POST['email'])) {
         .checkbox-label {
             display: flex;
             align-items: center;
-            margin: 10px 0;
+            margin: 10px 0 20px 0; /* Increased margin below */
             font-size: 16px;
             position: relative;
             cursor: pointer;
@@ -195,6 +195,16 @@ if ($section == 'login' && isset($_POST['email'])) {
             position: absolute;
             top: 3px;
             left: 5px;
+        }
+        .forgot-password-link {
+            color: <?php echo $selected_color; ?>;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Added margin to create space below */
+        }
+        .forgot-password-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>

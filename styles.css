@@ -36,7 +36,7 @@ header {
   .buttonsignin {
     position: absolute;
     top: 10px;
-    left: 90%;
+    right: 10px; /* Align to the right side */
     padding: 20px 40px;
     border: 2px solid #ffcc00;
     border-radius: 5px;
@@ -44,15 +44,15 @@ header {
     color: white;
     font-size: 1.5em;
     transition: background-color 0.3s, color 0.3s;
-  }
-  .buttonsignin:hover {
-      background-color: #ffcc00;
-      color: #333;
-  }
-  .buttonsigninhacking {
+}
+.buttonsignin:hover {
+    background-color: #ffcc00;
+    color: #333;
+}
+.buttonsigninhacking {
     position: absolute;
     top: 10px;
-    left: 90%;
+    right: 10px; /* Align to the right side */
     padding: 20px 40px;
     border: 2px solid #00ff00;
     border-radius: 5px;
@@ -60,15 +60,15 @@ header {
     color: white;
     font-size: 1.5em;
     transition: background-color 0.3s, color 0.3s;
-  }
-  .buttonsigninhacking:hover {
-      background-color: #00ff00;
-      color: #333;
-  }
-  .buttonsigninfishing {
+}
+.buttonsigninhacking:hover {
+    background-color: #00ff00;
+    color: #333;
+}
+.buttonsigninfishing {
     position: absolute;
     top: 10px;
-    left: 90%;
+    right: 10px; /* Align to the right side */
     padding: 20px 40px;
     border: 2px solid #007fff;
     border-radius: 5px;
@@ -76,11 +76,13 @@ header {
     color: white;
     font-size: 1.5em;
     transition: background-color 0.3s, color 0.3s;
-  }
-  .buttonsigninfishing:hover {
-      background-color: #007fff;
-      color: #333;
-  }
+}
+.buttonsigninfishing:hover {
+    background-color: #007fff;
+    color: #333;
+}
+
+
 .logo {
     font-size: 36px;
     font-weight: bold;

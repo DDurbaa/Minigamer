@@ -2,16 +2,16 @@
 
 include "inc/loader.php";
 $msg = "";
-$formHtml = ""; // Přidána proměnná pro uchování HTML formuláře
-$DB = new DB(); // Inicializace objektu DB mimo podmínky pro reset hesla
+$formHtml = "";
+$DB = new DB();
+
+$colors = ['#CD090F', '#ffcc00', '#00ff00', '#007fff'];
+$selected_color = $colors[array_rand($colors)];
 
 if (isset($_GET["k"]) && isset($_GET["email"]) && isset($_GET["action"]) && ($_GET["action"] == "reset") && !isset($_POST["action"])) {
     $key = $_GET['k'];
     $email = $_GET['email'];
     $curDate = date("Y-m-d H:i:s");
-
-    // Pokud se provede reset hesla, je třeba inicializovat objekt DB
-    $DB = new DB();
 
     $row = $DB->query("SELECT * FROM password_reset_temp WHERE `key`=? and `email`=? LIMIT 1", $key, $email)->fetchArray();
 
@@ -21,21 +21,17 @@ if (isset($_GET["k"]) && isset($_GET["email"]) && isset($_GET["action"]) && ($_G
         $expDate = $row['expDate'];
         if ($expDate >= $curDate) {
             $formHtml = '<h1>Reset Password</h1>
-                    <form action="" method="POST">
+                    <form action="" method="POST" class="form-container">
                         <input type="hidden" name="action" value="update" />
-                        <label>Enter New Password:</label><br />
-                        <input type="password" name="pass1" required /><br /><br />
-                        <label>Re-Enter New Password:</label><br />
-                        <input type="password" name="pass2" required/><br /><br />
+                        <input type="password" name="pass1" required placeholder="Enter New Password" class="input-field"/><br />
+                        <input type="password" name="pass2" required placeholder="Re-Enter New Password" class="input-field"/><br />
                         <input type="hidden" name="email" value="' . htmlspecialchars($email) . '"/>
-                        <input type="submit" value="Reset Password" />
+                        <input type="submit" value="Reset Password" class="submit-btn"/>
                     </form>';
         } else {
             $msg = "<h1>Link is expired!</h1> <p>The link is expired. They stay valid for 24 hours after request!</p>";
         }
     }
-} else {
-    //header("Location: index.php");
 }
 
 if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "update")) {
@@ -46,26 +42,22 @@ if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "u
     if ($pass1 != $pass2) {
         $msg .= "<p>Passwords do not match, both passwords should be the same.<br /><br /></p>";
         $formHtml = '<h1>Reset Password</h1>
-                    <form action="" method="POST">
+                    <form action="" method="POST" class="form-container">
                         <input type="hidden" name="action" value="update" />
-                        <label>Enter New Password:</label><br />
-                        <input type="password" name="pass1" required /><br /><br />
-                        <label>Re-Enter New Password:</label><br />
-                        <input type="password" name="pass2" required/><br /><br />
+                        <input type="password" name="pass1" required placeholder="Enter New Password" class="input-field"/><br />
+                        <input type="password" name="pass2" required placeholder="Re-Enter New Password" class="input-field"/><br />
                         <input type="hidden" name="email" value="' . htmlspecialchars($email) . '"/>
-                        <input type="submit" value="Reset Password" />
+                        <input type="submit" value="Reset Password" class="submit-btn"/>
                     </form>';
     } else if (strlen($pass1) < 8) {
         $msg .= "<p>Password must be at least 8 characters long!</p>";
         $formHtml = '<h1>Reset Password</h1>
-                    <form action="" method="POST">
+                    <form action="" method="POST" class="form-container">
                         <input type="hidden" name="action" value="update" />
-                        <label>Enter New Password:</label><br />
-                        <input type="password" name="pass1" required /><br /><br />
-                        <label>Re-Enter New Password:</label><br />
-                        <input type="password" name="pass2" required/><br /><br />
+                        <input type="password" name="pass1" required placeholder="Enter New Password" class="input-field"/><br />
+                        <input type="password" name="pass2" required placeholder="Re-Enter New Password" class="input-field"/><br />
                         <input type="hidden" name="email" value="' . htmlspecialchars($email) . '"/>
-                        <input type="submit" value="Reset Password" />
+                        <input type="submit" value="Reset Password" class="submit-btn"/>
                     </form>';
     } else {
         $hashedPassword = password_hash($pass1, PASSWORD_DEFAULT);
@@ -74,7 +66,6 @@ if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "u
 
         $msg = '<div class="success"><p>Congratulations! Your password has been updated successfully.</p>
                 <p><a href="sign-in.php">Click here</a> to Login.</p></div><br />';
-        // Není třeba nastavovat $formHtml, protože formulář již není potřeba zobrazovat po úspěšném resetování hesla.
     }
 }
 
@@ -87,20 +78,84 @@ if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "u
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="mlogo.png">
     <title>Minigamer | Password Reset</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            margin-top: 100px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            box-sizing: border-box;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-field:focus {
+            border-color: <?php echo $selected_color; ?>;
+        }
+        .submit-btn {
+            background-color: #2a2a2a;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            border: 2px solid <?php echo $selected_color; ?>;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-sizing: border-box;
+            font-size: 18px;
+            transition: background-color 0.3s, color 0.3s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            background-color: <?php echo $selected_color; ?>;
+            color: #333;
+        }
+        .success {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            margin-top: 100px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <?php
-    if ($msg != "") {
-        echo $msg;
-    }
-    
-    // Zobrazit formulář, pokud je $formHtml nastavený
-    if (!empty($formHtml)) {
-        echo $formHtml;
-    }
-    ?>
+<?php
+if ($msg != "") {
+    echo $msg;
+}
+
+if (!empty($formHtml)) {
+    echo $formHtml;
+}
+?>
 
 </body>
 </html>

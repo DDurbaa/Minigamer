@@ -20,6 +20,7 @@ if (isset($_SESSION['user_id']))
 </head>
 <body>
     <header>
+    <a href="contact.php" class="buttonexit">CONTACT</a>
         <div class="logo">
             <img src="mlogo.png" alt="Minigamer Logo">
         </div>

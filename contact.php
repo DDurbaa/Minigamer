@@ -106,7 +106,7 @@
             <h3>Dominik Urbánek</h3>
             <div class="icon-container">
                 <a href="https://dominikurbanek.cz/"><i class="fas fa-globe icon"></i></a>
-                <a href="https://github.com"><i class="fab fa-github icon"></i></a>
+                <a href="https://github.com/DDurbaa"><i class="fab fa-github icon"></i></a>
                 <a href="https://www.instagram.com/urbanekdominik/"><i class="fab fa-instagram icon"></i></a>
             </div>
         </div>
