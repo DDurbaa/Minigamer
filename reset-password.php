@@ -64,7 +64,7 @@ if (isset($_POST["email"]) && isset($_POST["action"]) && ($_POST["action"] == "u
         $DB->query("UPDATE `users` SET `password`=? WHERE `email`=?", $hashedPassword, $email);
         $DB->query("DELETE FROM `password_reset_temp` WHERE `email`=?", $email);
 
-        $msg = '<div class="success"><p>Congratulations! Your password has been updated successfully.</p>
+        $msg = '<div class="success"><p>Your password has been updated successfully.</p>
                 <p><a href="sign-in.php" class="button-link">Login</a></p></div>';
     }
 }
