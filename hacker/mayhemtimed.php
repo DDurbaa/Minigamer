@@ -14,7 +14,7 @@ if ($isUserLoggedIn) {
     $Score = new Score(6, $_SESSION['user_id']);
     $Login->checkVerification($_SESSION['user_id']);
     $best = $Score->getPlayerScore();
-    $popupMsg = "BEST: " . $best . " CURRENT: ";
+    $popupMsg = "BEST: " . $best . "<br>CURRENT: ";
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -53,19 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             background-color: #1a1a1a;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            /* Disable scrolling */
             margin: 0;
-            /* Remove default margin */
         }
 
         #score {
             position: fixed;
-            /* Change to fixed */
             bottom: 0;
-            /* Stick to the bottom */
             left: 50%;
             transform: translateX(-50%);
-            /* Center horizontally */
             color: white;
             font-size: 80px;
         }
@@ -128,9 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         #timer {
-            font-size: 2em;
+            position: fixed;
+            top: 47%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
             color: white;
-            margin-bottom: 20px;
         }
 
         #popup {
@@ -138,31 +136,34 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #fff;
+            background-color: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
             z-index: 1000;
             text-align: center;
         }
 
         #popup-message {
-            color: black;
+            color: #00ff00;
+            font-size: 2em;
         }
 
         #popup-button {
             padding: 10px 20px;
             margin-top: 10px;
-            border: none;
-            background-color: #007bff;
-            color: #fff;
+            border: 2px solid #00ff00;
+            background-color: transparent;
+            color: #00ff00;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 1.5em;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         #popup-button:hover {
-            background-color: #0056b3;
+            background-color: #00ff00;
+            color: #1a1a1a;
         }
     </style>
 </head>
@@ -179,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="score" id="score">0</div>
         <form action="" method="post" id="popupForm">
             <div id="popup" style="display: none;">
-                <p id="popup-message"><?php echo $popupMsg ?></p>
+                <p id="popup-message"><?php echo $popupMsg ?><span id="current-score"></span></p>
                 <input type="hidden" id="hidden-score" name="score" value="">
                 <button type="submit" id="popup-button" name="update_score">OK</button>
             </div>
@@ -192,37 +193,41 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const radius = 200; // Zvýšení poloměru kruhu
-        const targetWidth = 0.2; // Zvýšená šířka cílového bodu
+        const radius = 200;
+        const targetWidth = 0.2;
         let targetPoints = [];
         let currentAngle = 0;
-        let speed = 0.05; // Zvýšení rychlosti ukazatele
+        let speed = 0.05;
         let hits = 0;
         let score = 0;
-        let lastHitAngle = -Infinity; // Inicializace s hodnotou, která nemůže být dosažena
+        let lastHitAngle = -Infinity;
         const hitColors = ['#FF0', '#FF0', '#FF0'];
-        const hitStatus = [false, false, false]; // Stav zásahu pro každý bod
-        const hitGlows = [false, false, false]; // Glow effect status for each point
+        const hitStatus = [false, false, false];
+        const hitGlows = [false, false, false];
 
         let lastTime = performance.now();
-        let spacePressed = false; // Stav pro stisknutí mezerníku
-        let spacePressTimeout = false; // Zamezení držení mezerníku
-        let timeLeft = 60; // 60 seconds countdown
+        let spacePressed = false;
+        let spacePressTimeout = false;
+        let timeLeft = 60;
         const timerElement = document.getElementById("timer");
         let popupActive = false;
         let scoreAdded = false;
+        let gameActive = true;
 
         function endGame() {
             const hiddenScoreInput = document.getElementById("hidden-score");
             hiddenScoreInput.value = score;
             const popup = document.getElementById("popup");
             const messageElement = document.getElementById("popup-message");
+            const currentScoreElement = document.getElementById("current-score");
+            currentScoreElement.textContent = score;
             if (!scoreAdded && isUserLoggedIn) {
-                messageElement.textContent += score;
+                messageElement.innerHTML = `BEST: <?php echo $best ?> <br>CURRENT: ` + score;
                 scoreAdded = true;
             }
             popup.style.display = "block";
             popupActive = true;
+            gameActive = false;
         }
 
         function updateTimer() {
@@ -249,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         function isValidAngle(newAngle) {
-            const minDistance = 0.5; // Minimální vzdálenost mezi úhly (v radiánech)
+            const minDistance = 0.5;
             for (let angle of targetPoints) {
                 let distance = Math.abs(newAngle - angle);
                 if (distance < minDistance || distance > (2 * Math.PI - minDistance)) {
@@ -263,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.strokeStyle = '#0F0'; // Změna barvy kruhu na zelenou
+            ctx.strokeStyle = '#0F0';
             ctx.lineWidth = 5;
             ctx.stroke();
             ctx.closePath();
@@ -274,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 const x = centerX + radius * Math.cos(angle);
                 const y = centerY + radius * Math.sin(angle);
                 ctx.beginPath();
-                ctx.arc(x, y, 20, 0, Math.PI * 2); // Zvýšený poloměr cílového bodu
+                ctx.arc(x, y, 20, 0, Math.PI * 2);
                 ctx.fillStyle = hitColors[index];
                 ctx.fill();
                 ctx.closePath();
@@ -309,10 +314,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         function checkHit() {
             for (let i = 0; i < targetPoints.length; i++) {
                 if (!hitStatus[i] && Math.abs(currentAngle - targetPoints[i]) < targetWidth) {
-                    hitColors[i] = '#0F0'; // Změnit barvu na zelenou při zásahu
-                    hitStatus[i] = true; // Označit bod jako zasažený
-                    hitGlows[i] = true; // Enable glow effect
-                    lastHitAngle = currentAngle; // Uložit úhel posledního zásahu
+                    hitColors[i] = '#0F0';
+                    hitStatus[i] = true;
+                    hitGlows[i] = true;
+                    lastHitAngle = currentAngle;
                     hits++;
                     if (hits === 3) {
                         score++;
@@ -331,7 +336,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             hitColors.fill('#FF0');
             hitStatus.fill(false);
             hitGlows.fill(false);
-            lastHitAngle = -Infinity; // Reset úhlu posledního zásahu
+            lastHitAngle = -Infinity;
             generateRandomAngles();
         }
 
@@ -341,28 +346,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             timeLeft = 60;
             timerElement.textContent = timeLeft;
             resetGame();
+            gameActive = true;
         }
 
         function gameLoop(currentTime) {
-            const deltaTime = (currentTime - lastTime) / 1000; // Calculate the time difference in seconds
+            const deltaTime = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
 
-            drawCircle();
-            drawTargetPoints();
-            drawMovingIndicator();
-            currentAngle += speed * deltaTime * 60; // Scale the speed by deltaTime and FPS (assumed to be 60)
-            if (currentAngle >= Math.PI * 2) {
-                currentAngle = 0;
+            if (gameActive) {
+                drawCircle();
+                drawTargetPoints();
+                drawMovingIndicator();
+                currentAngle += speed * deltaTime * 60;
+                if (currentAngle >= Math.PI * 2) {
+                    currentAngle = 0;
+                }
             }
+
             requestAnimationFrame(gameLoop);
         }
 
         document.addEventListener('keydown', event => {
-            if (event.code === 'Space' && !spacePressTimeout) {
+            if (event.code === 'Space' && !spacePressTimeout && gameActive) {
                 checkHit();
-                spacePressTimeout = true; // Zamezení držení mezerníku
+                spacePressTimeout = true;
                 setTimeout(() => {
-                    spacePressTimeout = false; // Obnovit možnost stisku mezerníku po 300ms
+                    spacePressTimeout = false;
                 }, 300);
             } else if (event.code === 'KeyR') {
                 resetAll();

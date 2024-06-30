@@ -2,7 +2,8 @@
 
 include "../inc/loader.php";
 
-$Login = new Login();session_start();
+$Login = new Login();
+session_start();
 $Login->checkRememberMe();
 $popupMsg = "Sign in to save your score!";
 $gameScore = "";
@@ -183,31 +184,34 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #fff;
+            background-color: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
             z-index: 1000;
             text-align: center;
         }
 
         #popup-message {
-            color: black;
+            color: #00ff00;
+            font-size: 2em;
         }
 
         #popup-button {
             padding: 10px 20px;
             margin-top: 10px;
-            border: none;
-            background-color: #007bff;
-            color: #fff;
+            border: 2px solid #00ff00;
+            background-color: transparent;
+            color: #00ff00;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 1.5em;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         #popup-button:hover {
-            background-color: #0056b3;
+            background-color: #00ff00;
+            color: #1a1a1a;
         }
     </style>
 </head>
@@ -223,9 +227,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <form action="" method="post" id="popupForm">
         <div id="popup" style="display: none;">
-            <p id="popup-message"><?php echo $popupMsg ?></p>
+        <p id="popup-message"><?php echo $popupMsg ?><br><span id="current-score"></span></p>
             <input type="hidden" id="hidden-score" name="score" value="">
-            <button type="submit" id="popup-button" name="update_score">X</button>
+            <button type="submit" id="popup-button" name="update_score">OK</button>
         </div>
     </form>
     <script>
@@ -243,27 +247,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         const scoreDisplay = document.getElementById('score');
         const zonesContainer = document.getElementById('zones');
         const gameContainer = document.getElementById('game');
+        const popup = document.getElementById('popup');
+        const popupMessage = document.getElementById('popup-message');
+        const currentScoreElement = document.getElementById('current-score');
         let direction = Math.random() < 0.5 ? -1 : 1;
         let timeLeft = 60;
         const timerElement = document.getElementById("timer");
         let popupActive = false;
-        let form = document.getElementById('popupForm');
+        let gameActive = true;
         let scoreAdded = false;
 
         function endGame() {
+            gameActive = false;
             const hiddenScoreInput = document.getElementById("hidden-score");
             hiddenScoreInput.value = score;
-
-            const popup = document.getElementById("popup");
-            const messageElement = document.getElementById("popup-message");
             if (!scoreAdded && isUserLoggedIn) {
-                messageElement.textContent += score;
+                popupMessage.innerHTML = `BEST: <?php echo $best ?> <br>CURRENT: ` + score;
                 scoreAdded = true;
             }
-
+            currentScoreElement.textContent = score;
             popup.style.display = "block";
             popupActive = true;
         }
+
 
         function updateTimer() {
             if (timeLeft > 0) timeLeft--;
@@ -284,19 +290,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 stopPointer();
             } else if (event.key === 'r' || event.key === 'R') {
                 resetGame();
-            } else if (event.key === "Escape") {
-                if (popupActive) {
-                    popupActive = false; // Ensure popupActive is reset
-                    const popup = document.getElementById("popup");
-                    popup.style.display = "none"; // Hide the popup
-                    form.submit();
-                    location.reload(); 
-                }
-
             }
         });
 
         function stopPointer() {
+            if (!gameActive) return;
             const pointerRect = pointer.getBoundingClientRect();
             const zones = document.querySelectorAll('.zone');
             let hit = false;
@@ -308,18 +306,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     if (zone.classList.contains('green')) {
                         score++;
                         pulseBorder('#0be20b');
-
                     } else if (zone.classList.contains('blue')) {
                         score += 2;
                         pulseBorder('#007fff');
-
                     } else if (zone.classList.contains('red')) {
                         score = Math.max(0, score - 3);
                         pulseBorder('#CD090F');
-
                     } else if (zone.classList.contains('grey')) {
                         pulseBorder('grey');
-
+                        timeLeft = Math.max(0, timeLeft - 2);
                     }
                     scoreDisplay.textContent = `${score}`;
                     currentFieldIndex = (currentFieldIndex + 1) % fields.length;
@@ -327,6 +322,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     generateZones(fields[currentFieldIndex]);
                 }
             });
+            if (!hit) {
+                console.log('Missed all zones');
+            }
         }
 
         function pulseBorder(color) {
@@ -349,14 +347,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             generateZones(fields[currentFieldIndex]);
             timeLeft = 60;
             timerElement.textContent = timeLeft;
+            gameActive = true;
+            popup.style.display = "none";
         }
-
-        function checkScore() {
-            const scoreElement = document.getElementById('score');
-            scoreElement.textContent = score;
-        }
-
-        setInterval(checkScore, 10);
 
         function generateZones(field) {
             zonesContainer.innerHTML = '';
@@ -385,6 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         function movePointer() {
+            if (!gameActive) return;
             const gameWidth = document.getElementById('game').offsetWidth;
             const pointerWidth = pointer.offsetWidth;
             let left = parseFloat(pointer.style.left || '50%');
