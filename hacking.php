@@ -110,7 +110,7 @@
             </div>
         </div>
     </main>
-    <div class="leaderboards">
+    <div class="leaderboards" id="leaderboard">
         <?php 
             $ScoreCP->displayScoresTable("Cyberpunk");
             $ScoreUtopia->displayScoresTable("Utopia");

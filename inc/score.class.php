@@ -2,18 +2,21 @@
 
 require_once 'db.class.php';
 
-class Score {
+class Score
+{
     private $gameId;
     private $userId;
     private $db;
 
-    public function __construct($gameId, $userId = null) {
+    public function __construct($gameId, $userId = null)
+    {
         $this->gameId = $gameId;
         $this->userId = $userId;
         $this->db = new DB();  // assuming the DB class is in the same directory
     }
 
-    public function getTopScores() {
+    public function getTopScores()
+    {
         $query = "
             SELECT hs.user_id, u.username, hs.score 
             FROM highscores hs 
@@ -26,7 +29,8 @@ class Score {
         return $result;
     }
 
-    public function getPlayerRank() {
+    public function getPlayerRank()
+    {
         if ($this->userId === null) {
             return null;
         }
@@ -52,7 +56,8 @@ class Score {
         return array_merge($result, $playerScoreResult);
     }
 
-    public function getTopScoresWithPlayerRank() {
+    public function getTopScoresWithPlayerRank()
+    {
         $topScores = $this->getTopScores();
         $playerInTop = false;
 
@@ -75,43 +80,47 @@ class Score {
         return ['topScores' => $topScores];
     }
 
-    public function displayScoresTable($title) {
+    public function displayScoresTable($title)
+    {
         $result = $this->getTopScoresWithPlayerRank();
         $topScores = $result['topScores'];
         $playerRank = $result['playerRank'] ?? null;
 
         // Display title
-    echo "<div class='score-table'>";
-    echo "<h2>{$title}</h2>";
+        echo "<div class='score-table'>";
+        echo "<h2>{$title}</h2>";
 
-    // Display table
-    echo "<table border='1'>";
-    echo "<tr><th>Rank</th><th>Username</th><th>Score</th></tr>";
-    $rank = 1;
-    foreach ($topScores as $score) {
-        echo "<tr><td>{$rank}</td><td>{$score['username']}</td><td>{$score['score']}</td></tr>";
-        $rank++;
+        // Display table
+        echo "<table border='1'>";
+        echo "<tr><th>Rank</th><th>Username</th><th>Score</th></tr>";
+
+        if (empty($topScores)) {
+            echo "<tr><td colspan='3'>No scores set!</td></tr>";
+        } else {
+            $rank = 1;
+            foreach ($topScores as $score) {
+                echo "<tr><td>{$rank}</td><td>{$score['username']}</td><td>{$score['score']}</td></tr>";
+                $rank++;
+            }
+
+            if ($playerRank && isset($playerRank['username']) && isset($playerRank['score'])) {
+                echo "<tr><td>{$playerRank['rank']}</td><td>{$playerRank['username']}</td><td>{$playerRank['score']}</td></tr>";
+            }
+        }
+
+        echo "</table>";
+        echo "</div>";
     }
 
-    if ($playerRank) {
-        echo "<tr><td>{$playerRank['rank']}</td><td>{$playerRank['username']}</td><td>{$playerRank['score']}</td></tr>";
-    }
-
-    echo "</table>";
-    echo "</div>";
-    }
-
-    public function getPlayerScore() 
+    public function getPlayerScore()
     {
-        
+
         $result = $this->db->query("SELECT * FROM highscores WHERE user_id = ? AND game_id = ?", $this->userId, $this->gameId);
 
-        if ($result->numRows() > 0) 
-        {
+        if ($result->numRows() > 0) {
             // SKORE EXISTUJE -> RETURNE SE
             return $result->fetchArray()['score'];
-        } else 
-        {
+        } else {
             // SKORE NEEXISTUJE -> VYTVORI SE S HODNOTOU NULA A NULA SE I VRATI
             $this->db->query("INSERT INTO highscores (user_id, game_id, score) VALUES (?, ?, 0)", $this->userId, $this->gameId);
             return 0;
