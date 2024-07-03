@@ -2,7 +2,8 @@
 
 include "../inc/loader.php";
 
-$Login = new Login();session_start();
+$Login = new Login();
+session_start();
 $Login->checkRememberMe();
 $popupMsg = "Sign in to save your score!";
 $gameScore = "";
@@ -11,21 +12,22 @@ $best = "";
 $isUserLoggedIn = isset($_SESSION['user_id']);
 
 if ($isUserLoggedIn) {
-  $Score = new Score(2, $_SESSION['user_id']);
-  $Login->checkVerification($_SESSION['user_id']);
-  $best = $Score->getPlayerScore();
-  $popupMsg = "BEST: " . $best . " CURRENT: ";
+    $Score = new Score(4, $_SESSION['user_id']);
+    $Login->checkVerification($_SESSION['user_id']);
+    $best = $Score->getPlayerScore();
+    $popupMsg = "BEST: " . $best . "<br>CURRENT: ";
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-  if ($isUserLoggedIn) {
-    $gameScore = $_POST['score'];
-    if ($gameScore > $best) {
-      $Score->savePlayerScore($gameScore);
+    if ($isUserLoggedIn) {
+        $gameScore = $_POST['score'];
+        if ($gameScore > $best) {
+            $Score->savePlayerScore($gameScore);
+        }
     }
-  }
 
-  header("Location: " . $_SERVER['PHP_SELF']);
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 
 ?>
@@ -320,61 +322,62 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     startTimer();
 
     document.addEventListener('keydown', (e) => {
-      const currentLock = locks[currentLockIndex];
-      const pin = currentLock.querySelector('.pin');
-      let currentPosition = positions[currentLockIndex];
+  if (timeLeft > 0) { // Přidána kontrola času
+    const currentLock = locks[currentLockIndex];
+    const pin = currentLock.querySelector('.pin');
+    let currentPosition = positions[currentLockIndex];
 
-      if (e.key === 'ArrowUp') {
-        if (currentPosition < 180) {
-          currentPosition += 10;
-          positions[currentLockIndex] = currentPosition;
-          pin.style.bottom = `${currentPosition}px`;
-          checkSweetSpot(currentLockIndex, currentPosition, pin);
-          animatePick();
-        }
+    if (e.key === 'ArrowUp') {
+      if (currentPosition < 180) {
+        currentPosition += 10;
+        positions[currentLockIndex] = currentPosition;
+        pin.style.bottom = `${currentPosition}px`;
+        checkSweetSpot(currentLockIndex, currentPosition, pin);
+        animatePick();
       }
-      else if (e.key === 'r') {
-        resetGame();
-      } else if (e.key === 'ArrowDown') {
-        if (currentPosition > 0) {
-          currentPosition -= 10;
-          positions[currentLockIndex] = currentPosition;
-          pin.style.bottom = `${currentPosition}px`;
-          checkSweetSpot(currentLockIndex, currentPosition, pin);
-          animatePick();
+    }
+    else if (e.key === 'r') {
+      resetGame();
+    } else if (e.key === 'ArrowDown') {
+      if (currentPosition > 0) {
+        currentPosition -= 10;
+        positions[currentLockIndex] = currentPosition;
+        pin.style.bottom = `${currentPosition}px`;
+        checkSweetSpot(currentLockIndex, currentPosition, pin);
+        animatePick();
+      }
+    } else if (e.key === 'e') {
+      if (Math.abs(positions[currentLockIndex] - sweetSpots[currentLockIndex]) <= tolerance) {
+        pin.classList.add('green');
+        currentLockIndex++;
+        updatePickPosition();
+        if (currentLockIndex >= locks.length) {
+          score++;
+          document.getElementById("score").innerHTML = score;
+          resetLocks();
         }
-      } else if (e.key === 'e') {
-        if (Math.abs(positions[currentLockIndex] - sweetSpots[currentLockIndex]) <= tolerance) {
-          pin.classList.add('green');
-          currentLockIndex++;
+      } else {
+        if (currentLockIndex > 0) {
+          positions[currentLockIndex] = 0;
+          locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
+          currentLockIndex--;
+          positions[currentLockIndex] = 0;
+          locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
+          locks[currentLockIndex].querySelector('.pin').classList.remove('green');
           updatePickPosition();
-          if (currentLockIndex >= locks.length) {
-            score++;
-            document.getElementById("score").innerHTML = score;
-            resetLocks();
-          }
-        } else {
-          if (currentLockIndex > 0) {
-            positions[currentLockIndex] = 0;
-            locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
-            currentLockIndex--;
-            positions[currentLockIndex] = 0;
-            locks[currentLockIndex].querySelector('.pin').style.bottom = '0px';
-            locks[currentLockIndex].querySelector('.pin').classList.remove('green');
-            updatePickPosition();
-          }
         }
-      } else if (e.key === "Escape") {
-        if (popupActive) {
-          popupActive = false; // Ensure popupActive is reset
-          const popup = document.getElementById("popup");
-          popup.style.display = "none"; // Hide the popup
-          form.submit();
-          location.reload(); // Reload the page
-        }
-
       }
-    });
+    }
+  } else if (e.key === "Escape") {
+    if (popupActive) {
+      popupActive = false;
+      const popup = document.getElementById("popup");
+      popup.style.display = "none";
+      form.submit();
+      location.reload();
+    }
+  }
+});
 
     function checkSweetSpot(index, position, pin) {
       if (Math.abs(position - sweetSpots[index]) <= tolerance) {

@@ -2,7 +2,8 @@
 
 include "../inc/loader.php";
 
-$Login = new Login();session_start();
+$Login = new Login();
+session_start();
 $Login->checkRememberMe();
 $popupMsg = "Sign in to save your score!";
 $gameScore = "";
@@ -11,10 +12,10 @@ $best = "";
 $isUserLoggedIn = isset($_SESSION['user_id']);
 
 if ($isUserLoggedIn) {
-    $Score = new Score(3, $_SESSION['user_id']);
+    $Score = new Score(4, $_SESSION['user_id']);
     $Login->checkVerification($_SESSION['user_id']);
     $best = $Score->getPlayerScore();
-    $popupMsg = "BEST: " . $best . " CURRENT: ";
+    $popupMsg = "BEST: " . $best . "<br>CURRENT: ";
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 
 ?>
@@ -253,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </head>
 
 <body>
-  <a href="medievalmenu.php" class="buttonexit">EXIT</a>
+  <a href="schoolmenu.php" class="buttonexit">EXIT</a>
   <div id="game-container">
   <div id="timer">60</div>
     <div id="lock" style="transform: translate(-50%, -50%)">
@@ -298,35 +300,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       let isSpacePressed = false;
       let score = 0;
       let timeLeft = 60; // 60 seconds countdown
-        const timerElement = document.getElementById("timer");
-        let popupActive = false;
-        let form = document.getElementById('popupForm');
-        let scoreAdded = false;
+      const timerElement = document.getElementById("timer");
+      let popupActive = false;
+      let form = document.getElementById('popupForm');
+      let scoreAdded = false;
 
-        function endGame() {
-            const hiddenScoreInput = document.getElementById("hidden-score");
-            hiddenScoreInput.value = score;
-            const popup = document.getElementById("popup");
-            const messageElement = document.getElementById("popup-message");
-            if (!scoreAdded && isUserLoggedIn) {
-                messageElement.textContent += score;
-                scoreAdded = true;
-            }
-            popup.style.display = "block";
-            popupActive = true;
+      function endGame() {
+        const hiddenScoreInput = document.getElementById("hidden-score");
+        hiddenScoreInput.value = score;
+        const popup = document.getElementById("popup");
+        const messageElement = document.getElementById("popup-message");
+        if (!scoreAdded && isUserLoggedIn) {
+            messageElement.textContent += score;
+            scoreAdded = true;
         }
+        popup.style.display = "block";
+        popupActive = true;
+      }
 
-        function updateTimer() {
-            if (timeLeft > 0) timeLeft--;
-            timerElement.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                endGame();
-            }
+      function updateTimer() {
+        if (timeLeft > 0) timeLeft--;
+        timerElement.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          endGame();
         }
+      }
 
-        function startTimer() {
-            setInterval(updateTimer, 1000);
-        }
+      function startTimer() {
+        setInterval(updateTimer, 1000);
+      }
 
       const resetLock = () => {
         dialAngle = 0;
@@ -339,7 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         scoreElement.textContent = score;
         resetLock();
         timeLeft = 60;
-            timerElement.textContent = timeLeft;
+        timerElement.textContent = timeLeft;
       };
 
       startTimer();
@@ -367,33 +369,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       };
 
       document.addEventListener('keydown', (event) => {
-        if (event.code === 'ArrowLeft') {
-          dialAngle = (dialAngle - 5 + 360) % 360; // Otočení o 5 stupňů vlevo
-          updateDialPosition();
-        } else if (event.code === 'ArrowRight') {
-          dialAngle = (dialAngle + 5) % 360; // Otočení o 5 stupňů vpravo
-          updateDialPosition();
-        } else if (event.code === 'Space') {
-          if (!isSpacePressed) {
-            isSpacePressed = true;
-            if (Math.abs(dialAngle - correctAngle) < 10) {
-              score += 1;
-              scoreElement.textContent = score;
-              resetLock(); // Reset zámku po úspěšném odemčení
+        if (timeLeft > 0) {
+          if (event.code === 'ArrowLeft') {
+            dialAngle = (dialAngle - 5 + 360) % 360; // Otočení o 5 stupňů vlevo
+            updateDialPosition();
+          } else if (event.code === 'ArrowRight') {
+            dialAngle = (dialAngle + 5) % 360; // Otočení o 5 stupňů vpravo
+            updateDialPosition();
+          } else if (event.code === 'Space') {
+            if (!isSpacePressed) {
+              isSpacePressed = true;
+              if (Math.abs(dialAngle - correctAngle) < 10) {
+                score += 1;
+                scoreElement.textContent = score;
+                resetLock(); // Reset zámku po úspěšném odemčení
+              }
             }
+          } else if (event.code === 'KeyR') {
+            resetGame(); // Kompletní reset hry při stisknutí R
           }
-        } else if (event.code === 'KeyR') {
-          resetGame(); // Kompletní reset hry při stisknutí R
         }
-        else if (event.key === "Escape") {
-                if (popupActive) {
-                    popupActive = false;
-                    const popup = document.getElementById("popup");
-                    popup.style.display = "none";
-                    form.submit();
-                    location.reload();
-                }
-            }
+        if (event.key === "Escape") {
+          if (popupActive) {
+            popupActive = false;
+            const popup = document.getElementById("popup");
+            popup.style.display = "none";
+            form.submit();
+            location.reload();
+          }
+        }
       });
 
       document.addEventListener('keyup', (event) => {
