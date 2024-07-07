@@ -113,9 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         #timer {
-            font-size: 2em;
+            font-size: 2.5em;
             color: white;
-            margin-bottom: 20px;
+            position: fixed;
+            left: 50.2%;
+            transform: translateX(-50%);
         }
 
         #popup {
