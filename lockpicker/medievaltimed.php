@@ -128,9 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             background-color: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
             z-index: 1000;
             text-align: center;
+            opacity: 95%;
         }
 
         #popup-message {
@@ -143,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             margin-top: 10px;
             border: 2px solid #ffcc00;
             background-color: transparent;
-            color: #00ff00;
+            color: #ffcc00;
             cursor: pointer;
             border-radius: 5px;
             font-size: 1.5em;
@@ -151,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         #popup-button:hover {
-            background-color: #00ff00;
+            background-color: #ffcc00;
             color: #1a1a1a;
         }
     </style>
@@ -217,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         const popup = document.getElementById("popup");
         const messageElement = document.getElementById("popup-message");
         if (!scoreAdded && isUserLoggedIn) {
-            messageElement.textContent += score;
+            messageElement.innerHTML = `BEST: <?php echo $best ?> <br>CURRENT: ` + score;
             scoreAdded = true;
         }
         popup.style.display = "block";
