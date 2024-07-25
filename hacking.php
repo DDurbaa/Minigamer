@@ -28,8 +28,10 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         .leaderboards {
+            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
             display: flex;
             justify-content: center;
+            align-items: center; 
             gap: 20px; /* Přidáno pro rozestupy mezi tabulkami */
             color: #ffcc00;
             margin-top: 20px; /* Přidáno pro vizuální rozestup mezi kartami a tabulkami */
@@ -61,6 +63,12 @@
             border-radius: 5px; /* Zaoblení rohů */
             font-size: 18px; /* Zvětšení velikosti textu */
         }
+        .main-content {
+            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 </style>
 </head>
 <body>
@@ -78,7 +86,7 @@
         }
         ?>
     </header>
-    <main>
+    <main class="main-content">
         <div class="cards">
             <div class="card" id="cyberpunk">
                 <a href="hacker/cyberpunkmenu.php">

@@ -27,12 +27,21 @@
     <title>Lockpicker</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .leaderboards {
+        .main-content {
+            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
             display: flex;
             justify-content: center;
+            align-items: center;
+        }
+
+        .leaderboards {
+            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Svislé centrování */
             gap: 20px; /* Přidáno pro rozestupy mezi tabulkami */
             color: #ffcc00;
-            margin-top: 20px; /* Přidáno pro vizuální rozestup mezi kartami a tabulkami */
+            margin-top: 0; /* Vynulování margin-top */
         }
 
         .score-table {
@@ -78,7 +87,7 @@
         }
         ?>
     </header>
-    <main>
+    <main class="main-content">
         <div class="cards">
             <div class="card" id="medieval">
                 <a href="lockpicker/medievalmenu.php">
@@ -110,13 +119,12 @@
             </div>
         </div>
     </main>
-    <div class="leaderboards" id="leaderboard">
+    <section class="leaderboards" id="leaderboard">
         <?php 
             $ScoreKCD->displayScoresTable("Medieval");
             $ScoreMafia->displayScoresTable("Mafia");
             $ScoreSchool->displayScoresTable("School");
         ?>
-    </div>
+    </section>
 </body>
 </html>
-
