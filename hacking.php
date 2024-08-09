@@ -28,21 +28,21 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         .leaderboards {
-            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center; 
-            gap: 20px; /* Přidáno pro rozestupy mezi tabulkami */
-            color: #ffcc00;
-            margin-top: 20px; /* Přidáno pro vizuální rozestup mezi kartami a tabulkami */
+            gap: 20px;
+            color: #00ff00;
+            margin-top: 20px;
         }
 
         .score-table {
-            width: 400px; /* Šířka tabulek stejná jako karty */
-            background-color: transparent; /* Odstranění pozadí */
+            width: 400px; 
+            background-color: transparent; 
             border-radius: 10px;
-            box-shadow: none; /* Odstranění stínu */
-            margin: 0 20px; /* Přidáno pro vizuální rozestup mezi tabulkami */
+            box-shadow: none;
+            margin: 0 20px;
         }
 
         .score-table h2 {
@@ -56,20 +56,59 @@
         }
 
         .score-table th, .score-table td {
-            padding: 12px; /* Zvětšení paddingu pro větší text */
+            padding: 12px; 
             text-align: left;
-            border: 1px solid #00ff00; /* Změna barvy ohraničení na žlutou */
-            color: white; /* Změna barvy textu na bílou */
-            border-radius: 5px; /* Zaoblení rohů */
-            font-size: 18px; /* Zvětšení velikosti textu */
+            border: 1px solid #00ff00; 
+            color: white; 
+            border-radius: 5px; 
+            font-size: 18px;
         }
         .main-content {
-            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative; 
         }
-</style>
+
+        .scroll-arrow {
+            position: absolute;
+            bottom: 100px; 
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px; 
+            color: #00ff00; 
+            cursor: pointer;
+            animation: bounce 3s infinite; 
+        }
+
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-15px); 
+            }
+            60% {
+                transform: translateX(-50%) translateY(-7px);
+            }
+        }
+
+        .scroll-arrow:before {
+            content: '\2193'; 
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const arrow = document.querySelector('.scroll-arrow');
+            arrow.addEventListener('click', function() {
+                document.querySelector('#leaderboard').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -110,6 +149,7 @@
                 </a>
             </div>
         </div>
+        <div class="scroll-arrow"></div>
     </main>
     <div class="leaderboards" id="leaderboard">
         <?php 

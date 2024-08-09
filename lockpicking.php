@@ -32,7 +32,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative; /* Needed for positioning the arrow */
+            position: relative; 
         }
 
         .leaderboards {
@@ -72,34 +72,31 @@
             font-size: 18px; 
         }
 
-        /* Arrow styling */
         .scroll-arrow {
             position: absolute;
-            bottom: 100px; /* Raise the arrow higher */
+            bottom: 100px; 
             left: 50%;
             transform: translateX(-50%);
-            font-size: 40px; /* Increase the size of the arrow */
+            font-size: 40px; 
             color: #ffcc00;
             cursor: pointer;
-            animation: bounce 3s infinite; /* Slowing down the animation */
+            animation: bounce 3s infinite; 
         }
 
-        /* Animation for the arrow */
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {
                 transform: translateX(-50%) translateY(0);
             }
             40% {
-                transform: translateX(-50%) translateY(-15px); /* Increase bounce height */
+                transform: translateX(-50%) translateY(-15px); 
             }
             60% {
                 transform: translateX(-50%) translateY(-7px);
             }
         }
 
-        /* Using a proper arrow symbol */
         .scroll-arrow:before {
-            content: '\2193'; /* Down arrow symbol */
+            content: '\2193'; 
         }
     </style>
     <script>
