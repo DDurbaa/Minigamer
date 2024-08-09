@@ -165,11 +165,27 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             background-color: #00ff00;
             color: #1a1a1a;
         }
+        #game-message {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            z-index: 10;
+            font-weight: bold;
+            opacity: 1;
+            transition: opacity 1s ease-in-out; 
+        }
+
+
     </style>
 </head>
 
 <body>
     <a href="mayhemmenu.php" class="buttonexit">EXIT</a>
+    <div id="game-message">HACK THE DOTS</div>
     <div class="game-container">
         <div id="timer">60</div>
         <canvas id="gameCanvas" width="700" height="700"></canvas>
@@ -322,6 +338,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     if (hits === 3) {
                         score++;
                         scoreDisplay.textContent = score;
+                    
+                        if (score === 1) {
+                            const gameMessage = document.getElementById('game-message');
+                            gameMessage.style.opacity = '0'; 
+                        }
+                    
                         resetGame();
                         return;
                     }
@@ -338,13 +360,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             hitGlows.fill(false);
             lastHitAngle = -Infinity;
             generateRandomAngles();
+        
         }
+
 
         function resetAll() {
             score = 0;
             scoreDisplay.textContent = score;
             timeLeft = 60;
             timerElement.textContent = timeLeft;
+
+            const gameMessage = document.getElementById('game-message');
+            gameMessage.style.opacity = '1';
+        
             resetGame();
             gameActive = true;
         }

@@ -29,14 +29,14 @@
             color: #00ff00;
             background-color: #1a1a1a;
             font-family: Arial, sans-serif;
-            overflow: hidden; /* Disable scrolling */
-            margin: 0; /* Remove default margin */
+            overflow: hidden; 
+            margin: 0; 
         }
         #score {
-            position: fixed; /* Change to fixed */
-            bottom: 0; /* Stick to the bottom */
+            position: fixed; 
+            bottom: 0; 
             left: 50%;
-            transform: translateX(-50%); /* Center horizontally */
+            transform: translateX(-50%); 
             color: white;
             font-size: 80px;
         }
@@ -92,12 +92,27 @@
         .glow {
             animation: greenGlow 1s ease-out infinite;
         }
+        #game-message {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            z-index: 10;
+            font-weight: bold;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+
     </style>
 </head>
 <body>
     <a href="mayhemmenu.php" class="buttonexit">EXIT</a>
+    <div id="game-message">HACK THE DOTS</div>
     <div class="game-container">
-        <canvas id="gameCanvas" width="700" height="700"></canvas> <!-- Zvýšení velikosti plátna -->
+        <canvas id="gameCanvas" width="700" height="700"></canvas> 
         <div id="tooltip">
             <div class="tooltip-item">Restart: <span class="tooltip-key">R</span></div>
             <div class="tooltip-item">Select: <span class="tooltip-key">Space</span></div>
@@ -118,14 +133,14 @@
         let speed = 0.05; // Zvýšení rychlosti ukazatele
         let hits = 0;
         let score = 0;
-        let lastHitAngle = -Infinity; // Inicializace s hodnotou, která nemůže být dosažena
+        let lastHitAngle = -Infinity; 
         const hitColors = ['#FF0', '#FF0', '#FF0'];
-        const hitStatus = [false, false, false]; // Stav zásahu pro každý bod
-        const hitGlows = [false, false, false]; // Glow effect status for each point
+        const hitStatus = [false, false, false]; 
+        const hitGlows = [false, false, false]; 
 
         let lastTime = performance.now();
-        let spacePressed = false; // Stav pro stisknutí mezerníku
-        let spacePressTimeout = false; // Zamezení držení mezerníku
+        let spacePressed = false; 
+        let spacePressTimeout = false; 
 
         function generateRandomAngles() {
             targetPoints = [];
@@ -138,7 +153,7 @@
         }
 
         function isValidAngle(newAngle) {
-            const minDistance = 0.5; // Minimální vzdálenost mezi úhly (v radiánech)
+            const minDistance = 0.5; 
             for (let angle of targetPoints) {
                 let distance = Math.abs(newAngle - angle);
                 if (distance < minDistance || distance > (2 * Math.PI - minDistance)) {
@@ -152,7 +167,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.strokeStyle = '#0F0'; // Změna barvy kruhu na zelenou
+            ctx.strokeStyle = '#0F0'; 
             ctx.lineWidth = 5;
             ctx.stroke();
             ctx.closePath();
@@ -163,7 +178,7 @@
                 const x = centerX + radius * Math.cos(angle);
                 const y = centerY + radius * Math.sin(angle);
                 ctx.beginPath();
-                ctx.arc(x, y, 20, 0, Math.PI * 2); // Zvýšený poloměr cílového bodu
+                ctx.arc(x, y, 20, 0, Math.PI * 2); 
                 ctx.fillStyle = hitColors[index];
                 ctx.fill();
                 ctx.closePath();
@@ -195,19 +210,26 @@
             ctx.closePath();
         }
 
-        function checkHit() {
-            const minDistanceAfterHit = 0.5; // Minimální vzdálenost od posledního zásahu
+        const gameMessage = document.getElementById('game-message');
 
+        function checkHit() {
+            const minDistanceAfterHit = 0.5;
             for (let i = 0; i < targetPoints.length; i++) {
                 if (!hitStatus[i] && Math.abs(currentAngle - targetPoints[i]) < targetWidth) {
-                    hitColors[i] = '#0F0'; // Změnit barvu na zelenou při zásahu
-                    hitStatus[i] = true; // Označit bod jako zasažený
-                    hitGlows[i] = true; // Enable glow effect
-                    lastHitAngle = currentAngle; // Uložit úhel posledního zásahu
+                    hitColors[i] = '#0F0'; 
+                    hitStatus[i] = true; 
+                    hitGlows[i] = true; 
+                    lastHitAngle = currentAngle; 
                     hits++;
                     if (hits === 3) {
                         score++;
                         scoreDisplay.textContent = score;
+                    
+                        
+                        if (score === 1) {
+                            gameMessage.style.opacity = '0'; 
+                        }
+                    
                         resetGame();
                         return;
                     }
@@ -222,7 +244,7 @@
             hitColors.fill('#FF0');
             hitStatus.fill(false);
             hitGlows.fill(false);
-            lastHitAngle = -Infinity; // Reset úhlu posledního zásahu
+            lastHitAngle = -Infinity; 
             generateRandomAngles();
         }
 
@@ -233,13 +255,13 @@
         }
 
         function gameLoop(currentTime) {
-            const deltaTime = (currentTime - lastTime) / 1000; // Calculate the time difference in seconds
+            const deltaTime = (currentTime - lastTime) / 1000; 
             lastTime = currentTime;
 
             drawCircle();
             drawTargetPoints();
             drawMovingIndicator();
-            currentAngle += speed * deltaTime * 60; // Scale the speed by deltaTime and FPS (assumed to be 60)
+            currentAngle += speed * deltaTime * 60; 
             if (currentAngle >= Math.PI * 2) {
                 currentAngle = 0;
             }
@@ -249,9 +271,9 @@
         document.addEventListener('keydown', event => {
             if (event.code === 'Space' && !spacePressTimeout) {
                 checkHit();
-                spacePressTimeout = true; // Zamezení držení mezerníku
+                spacePressTimeout = true; 
                 setTimeout(() => {
-                    spacePressTimeout = false; // Obnovit možnost stisku mezerníku po 300ms
+                    spacePressTimeout = false; 
                 }, 300);
             } else if (event.code === 'KeyR') {
                 resetAll();
