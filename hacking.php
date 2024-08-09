@@ -109,13 +109,6 @@
                     </div>
                 </a>
             </div>
-            <div class="card" id="randomhacking">
-                <a href="#">
-                    <div class="card-content">
-                        <h2>WORK IN PROGRESS</h2>
-                    </div>
-                </a>
-            </div>
         </div>
     </main>
     <div class="leaderboards" id="leaderboard">

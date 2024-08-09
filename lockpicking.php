@@ -28,28 +28,28 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         .main-content {
-            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
+            height: 100vh; 
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .leaderboards {
-            height: 100vh; /* Nastavení výšky na 100 % výšky viewportu */
+            height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center; /* Svislé centrování */
-            gap: 20px; /* Přidáno pro rozestupy mezi tabulkami */
+            align-items: center; 
+            gap: 20px;
             color: #ffcc00;
-            margin-top: 0; /* Vynulování margin-top */
+            margin-top: 0; 
         }
 
         .score-table {
-            width: 400px; /* Šířka tabulek stejná jako karty */
-            background-color: transparent; /* Odstranění pozadí */
+            width: 400px; 
+            background-color: transparent; 
             border-radius: 10px;
-            box-shadow: none; /* Odstranění stínu */
-            margin: 0 20px; /* Přidáno pro vizuální rozestup mezi tabulkami */
+            box-shadow: none; 
+            margin: 0 20px; 
         }
 
         .score-table h2 {
@@ -63,12 +63,12 @@
         }
 
         .score-table th, .score-table td {
-            padding: 12px; /* Zvětšení paddingu pro větší text */
+            padding: 12px; 
             text-align: left;
-            border: 1px solid #ffcc00; /* Změna barvy ohraničení na žlutou */
-            color: white; /* Změna barvy textu na bílou */
-            border-radius: 5px; /* Zaoblení rohů */
-            font-size: 18px; /* Zvětšení velikosti textu */
+            border: 1px solid #ffcc00;
+            color: white; 
+            border-radius: 5px; 
+            font-size: 18px; 
         }
     </style>
 </head>
@@ -107,13 +107,6 @@
                 <a href="lockpicker/schoolmenu.php">
                     <div class="card-content">
                         <h2>SCHOOL</h2>
-                    </div>
-                </a>
-            </div>
-            <div class="card" id="random">
-                <a href="#">
-                    <div class="card-content">
-                        <h2>WORK IN PROGRESS</h2>
                     </div>
                 </a>
             </div>
