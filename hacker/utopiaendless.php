@@ -137,6 +137,42 @@
             display: inline-block;
             margin-left: 10px;
         }
+        #score-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .score-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        .score-box .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        .score-box .blue-box {
+            background-color: #007fff;
+        }
+
+        .score-box .green-box {
+            background-color: #0be20b;
+        }
+        .score-box .red-box {
+            background-color: #CD090F;
+        }
+
+        .score-box .grey-box {
+            background-color: grey;
+        }
     </style>
 </head>
 <body>
@@ -144,6 +180,20 @@
     <div id="game">
         <div id="pointer"></div>
         <div id="zones"></div>
+    </div>
+    <div id="score-info">
+        <div class="score-box">
+            <div class="color-box blue-box"></div>+2 points
+        </div>
+        <div class="score-box">
+            <div class="color-box green-box"></div>+1 point
+        </div>
+        <div class="score-box">
+            <div class="color-box red-box"></div>-3 points
+        </div>
+        <div class="score-box">
+            <div class="color-box grey-box"></div>Nothing
+        </div>
     </div>
     <div id="score">0</div>
     <script>

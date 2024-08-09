@@ -63,36 +63,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             background-color: #1a1a1a;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            /* Disable scrolling */
             margin: 0;
-            /* Remove default margin */
         }
 
         #game {
             position: relative;
             width: 700px;
-            /* Zvětšená šířka herního pole */
             height: 75px;
-            /* Zvětšená výška herního pole */
             margin-bottom: 20px;
             overflow: hidden;
             border: 4px solid #2a2a2a;
             --pulse-color: #2a2a2a;
-            /* Default border color */
         }
 
         #game.pulse {
             animation: pulseBorder 2s forwards;
-            /* Slow fading animation */
         }
 
         #pointer {
             position: absolute;
             float: right;
             width: 10px;
-            /* Zvětšená šířka pointeru */
             height: 75px;
-            /* Zvětšená výška pointeru */
             background-color: #ffcc00;
         }
 
@@ -124,12 +116,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         #score {
             position: fixed;
-            /* Change to fixed */
             bottom: 0;
-            /* Stick to the bottom */
             left: 50%;
             transform: translateX(-50%);
-            /* Center horizontally */
             color: white;
             font-size: 80px;
         }
@@ -213,6 +202,44 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             background-color: #00ff00;
             color: #1a1a1a;
         }
+
+        #score-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .score-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        .score-box .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        .score-box .blue-box {
+            background-color: #007fff;
+        }
+
+        .score-box .green-box {
+            background-color: #0be20b;
+        }
+        .score-box .red-box {
+            background-color: #CD090F;
+        }
+
+        .score-box .grey-box {
+            background-color: grey;
+        }
     </style>
 </head>
 
@@ -232,6 +259,22 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <button type="submit" id="popup-button" name="update_score">OK</button>
         </div>
     </form>
+
+    <div id="score-info">
+        <div class="score-box">
+            <div class="color-box blue-box"></div>+2 points
+        </div>
+        <div class="score-box">
+            <div class="color-box green-box"></div>+1 point
+        </div>
+        <div class="score-box">
+            <div class="color-box red-box"></div>-3 points
+        </div>
+        <div class="score-box">
+            <div class="color-box grey-box"></div>-2 Seconds
+        </div>
+    </div>
+
     <script>
         const fields = [
             ['blue', 'blue', 'red', 'gray', 'gray', 'gray', 'red', 'red', 'red', 'blue', 'gray', 'green', 'green'],
@@ -300,7 +343,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             let hit = false;
             zones.forEach((zone) => {
                 const zoneRect = zone.getBoundingClientRect();
-                // Přesnější kontrola pozice pointeru vůči zónám
                 if (pointerRect.right > zoneRect.left && pointerRect.left < zoneRect.right) {
                     hit = true;
                     if (zone.classList.contains('green')) {
