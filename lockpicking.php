@@ -32,6 +32,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative; /* Needed for positioning the arrow */
         }
 
         .leaderboards {
@@ -70,7 +71,47 @@
             border-radius: 5px; 
             font-size: 18px; 
         }
+
+        /* Arrow styling */
+        .scroll-arrow {
+            position: absolute;
+            bottom: 100px; /* Raise the arrow higher */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px; /* Increase the size of the arrow */
+            color: #ffcc00;
+            cursor: pointer;
+            animation: bounce 3s infinite; /* Slowing down the animation */
+        }
+
+        /* Animation for the arrow */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-15px); /* Increase bounce height */
+            }
+            60% {
+                transform: translateX(-50%) translateY(-7px);
+            }
+        }
+
+        /* Using a proper arrow symbol */
+        .scroll-arrow:before {
+            content: '\2193'; /* Down arrow symbol */
+        }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const arrow = document.querySelector('.scroll-arrow');
+            arrow.addEventListener('click', function() {
+                document.querySelector('#leaderboard').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -111,6 +152,8 @@
                 </a>
             </div>
         </div>
+        <!-- Scroll Arrow -->
+        <div class="scroll-arrow"></div>
     </main>
     <section class="leaderboards" id="leaderboard">
         <?php 
