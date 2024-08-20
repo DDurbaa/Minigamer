@@ -1,47 +1,11 @@
-<?php
-
-include "../inc/loader.php";
-
-$Login = new Login();
-session_start();
-$Login->checkRememberMe();
-$popupMsg = "Sign in to save your score!";
-$gameScore = "";
-$Score = "";
-$best = "";
-$isUserLoggedIn = isset($_SESSION['user_id']);
-
-if ($isUserLoggedIn) {
-    $Score = new Score(4, $_SESSION['user_id']);
-    $Login->checkVerification($_SESSION['user_id']);
-    $best = $Score->getPlayerScore();
-    $popupMsg = "BEST: " . $best . "<br>CURRENT: ";
-}
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    if ($isUserLoggedIn) {
-        $gameScore = $_POST['score'];
-        if ($gameScore > $best) {
-            $Score->savePlayerScore($gameScore);
-        }
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
-}
-
-?>
-
-<script>
-    // JESTLI JE PRIHLASENEJ PHP -> JS
-    const isUserLoggedIn = <?php echo json_encode($isUserLoggedIn); ?>;
-</script>
 <!DOCTYPE html>
 <html lang="cs">
 
 <head>
   <meta charset="UTF-8">
   <title>School Timed</title>
+  <link rel="icon" href="../mlogo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     @keyframes shake {
       0% {
@@ -76,6 +40,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+
+    #timer-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #timer {
+      font-size: 2em;
+      color: white;
+      margin: 0 20px;
+    }
+
+    .arrow {
+      font-size: 2.5em;
+      color: white;
+      opacity: 0.3;
+      transition: opacity 0.3s;
+    }
+
+    .active {
+      opacity: 1;
     }
 
     #lock {
@@ -214,54 +201,53 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       background-color: #CD090F;
       color: #333;
     }
-    #timer {
-            font-size: 2em;
-            color: white;
-            margin-bottom: 20px;
-        }
 
-        #popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
-            z-index: 1000;
-            text-align: center;
-            opacity: 95%;
-        }
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+      z-index: 1000;
+      text-align: center;
+      opacity: 95%;
+    }
 
-        #popup-message {
-            color: #ffcc00;
-            font-size: 2em;
-        }
+    #popup-message {
+      color: #ffcc00;
+      font-size: 2em;
+    }
 
-        #popup-button {
-            padding: 10px 20px;
-            margin-top: 10px;
-            border: 2px solid #ffcc00;
-            background-color: transparent;
-            color: #ffcc00;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 1.5em;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    #popup-button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: 2px solid #ffcc00;
+      background-color: transparent;
+      color: #ffcc00;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 1.5em;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        #popup-button:hover {
-            background-color: #ffcc00;
-            color: #1a1a1a;
-        }
+    #popup-button:hover {
+      background-color: #ffcc00;
+      color: #1a1a1a;
+    }
   </style>
 </head>
 
 <body>
   <a href="schoolmenu.php" class="buttonexit">EXIT</a>
   <div id="game-container">
-  <div id="timer">60</div>
+    <div id="timer-container">
+      <i id="arrow-left" class="arrow fas fa-arrow-left"></i>
+      <div id="timer">60</div>
+      <i id="arrow-right" class="arrow fas fa-arrow-right"></i>
+    </div>
     <div id="lock" style="transform: translate(-50%, -50%)">
       <div id="dial">
         <div class="numbers">1</div>
@@ -287,131 +273,145 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </div>
   </div>
   <form action="" method="post" id="popupForm">
-        <div id="popup" style="display: none;">
-            <p id="popup-message"><?php echo $popupMsg ?></p>
-            <input type="hidden" id="hidden-score" name="score" value="">
-            <button type="submit" id="popup-button" name="update_score">X</button>
-        </div>
-    </form>
+    <div id="popup" style="display: none;">
+      <p id="popup-message"><?php echo $popupMsg ?></p>
+      <input type="hidden" id="hidden-score" name="score" value="">
+      <button type="submit" id="popup-button" name="update_score">X</button>
+    </div>
+  </form>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const lock = document.getElementById('lock');
-      const dial = document.getElementById('dial');
-      const indicator = document.getElementById('indicator');
-      const scoreElement = document.getElementById('score-value');
-      let dialAngle = 0;
-      let correctAngle = Math.floor(Math.random() * 360);
-      let isSpacePressed = false;
-      let score = 0;
-      let timeLeft = 60; // 60 seconds countdown
-      const timerElement = document.getElementById("timer");
-      let popupActive = false;
-      let form = document.getElementById('popupForm');
-      let scoreAdded = false;
+document.addEventListener('DOMContentLoaded', () => {
+    const lock = document.getElementById('lock');
+    const dial = document.getElementById('dial');
+    const indicator = document.getElementById('indicator');
+    const scoreElement = document.getElementById('score-value');
+    const arrowLeft = document.getElementById('arrow-left');
+    const arrowRight = document.getElementById('arrow-right');
+    let dialAngle = 0;
+    let correctAngle = Math.floor(Math.random() * 360);
+    let isSpacePressed = false;
+    let score = 0;
+    let timeLeft = 60;
+    const timerElement = document.getElementById("timer");
+    let popupActive = false;
+    let form = document.getElementById('popupForm');
+    let scoreAdded = false;
 
-      function endGame() {
+    function endGame() {
         const hiddenScoreInput = document.getElementById("hidden-score");
         hiddenScoreInput.value = score;
         const popup = document.getElementById("popup");
         const messageElement = document.getElementById("popup-message");
         if (!scoreAdded && isUserLoggedIn) {
-          messageElement.innerHTML = `BEST: <?php echo $best ?> <br>CURRENT: ` + score;
+            messageElement.innerHTML = `BEST: <?php echo $best ?> <br>CURRENT: ` + score;
             scoreAdded = true;
         }
         popup.style.display = "block";
         popupActive = true;
-      }
+    }
 
-      function updateTimer() {
+    function updateTimer() {
         if (timeLeft > 0) timeLeft--;
         timerElement.textContent = timeLeft;
         if (timeLeft <= 0) {
-          endGame();
+            endGame();
         }
-      }
+    }
 
-      function startTimer() {
+    function startTimer() {
         setInterval(updateTimer, 1000);
-      }
+    }
 
-      const resetLock = () => {
+    const resetLock = () => {
         dialAngle = 0;
         correctAngle = Math.floor(Math.random() * 360);
         updateDialPosition();
-      };
+    };
 
-      const resetGame = () => {
+    const resetGame = () => {
         score = 0;
         scoreElement.textContent = score;
         resetLock();
         timeLeft = 60;
         timerElement.textContent = timeLeft;
-      };
+    };
 
-      startTimer();
+    startTimer();
 
-      const updateDialPosition = () => {
+    const updateDialPosition = () => {
         dial.style.transform = `translate(-50%, -50%) rotate(${dialAngle}deg)`;
         const diff = Math.abs(dialAngle - correctAngle);
         let shakeIntensity = 0;
 
         if (diff < 10) {
-          shakeIntensity = 0.2;
-          indicator.style.backgroundColor = 'green';
+            shakeIntensity = 0.2;
+            indicator.style.backgroundColor = 'green';
         } else if (diff < 30) {
-          shakeIntensity = 0.5;
-          indicator.style.backgroundColor = 'red';
+            shakeIntensity = 0.5;
+            indicator.style.backgroundColor = 'red';
         } else if (diff < 60) {
-          shakeIntensity = 1;
-          indicator.style.backgroundColor = 'red';
+            shakeIntensity = 1;
+            indicator.style.backgroundColor = 'red';
         } else {
-          shakeIntensity = 1.5;
-          indicator.style.backgroundColor = 'red';
+            shakeIntensity = 1.5;
+            indicator.style.backgroundColor = 'red';
         }
 
         lock.style.animation = `shake ${shakeIntensity}s infinite`;
-      };
 
-      document.addEventListener('keydown', (event) => {
+        // Determine shortest direction to correctAngle
+        let clockwiseDist = (correctAngle - dialAngle + 360) % 360;
+        let counterClockwiseDist = (dialAngle - correctAngle + 360) % 360;
+
+        if (clockwiseDist < counterClockwiseDist) {
+            arrowRight.classList.add('active');
+            arrowLeft.classList.remove('active');
+        } else {
+            arrowRight.classList.remove('active');
+            arrowLeft.classList.add('active');
+        }
+    };
+
+    document.addEventListener('keydown', (event) => {
         if (timeLeft > 0) {
-          if (event.code === 'ArrowLeft') {
-            dialAngle = (dialAngle - 5 + 360) % 360; // Otočení o 5 stupňů vlevo
-            updateDialPosition();
-          } else if (event.code === 'ArrowRight') {
-            dialAngle = (dialAngle + 5) % 360; // Otočení o 5 stupňů vpravo
-            updateDialPosition();
-          } else if (event.code === 'Space') {
-            if (!isSpacePressed) {
-              isSpacePressed = true;
-              if (Math.abs(dialAngle - correctAngle) < 10) {
-                score += 1;
-                scoreElement.textContent = score;
-                resetLock(); // Reset zámku po úspěšném odemčení
-              }
+            if (event.code === 'ArrowLeft') {
+                dialAngle = (dialAngle - 5 + 360) % 360;
+                updateDialPosition();
+            } else if (event.code === 'ArrowRight') {
+                dialAngle = (dialAngle + 5) % 360;
+                updateDialPosition();
+            } else if (event.code === 'Space') {
+                if (!isSpacePressed) {
+                    isSpacePressed = true;
+                    if (Math.abs(dialAngle - correctAngle) < 10) {
+                        score += 1;
+                        scoreElement.textContent = score;
+                        resetLock();
+                    }
+                }
+            } else if (event.code === 'KeyR') {
+                resetGame();
             }
-          } else if (event.code === 'KeyR') {
-            resetGame(); // Kompletní reset hry při stisknutí R
-          }
         }
         if (event.key === "Escape") {
-          if (popupActive) {
-            popupActive = false;
-            const popup = document.getElementById("popup");
-            popup.style.display = "none";
-            form.submit();
-            location.reload();
-          }
+            if (popupActive) {
+                popupActive = false;
+                const popup = document.getElementById("popup");
+                popup.style.display = "none";
+                form.submit();
+                location.reload();
+            }
         }
-      });
-
-      document.addEventListener('keyup', (event) => {
-        if (event.code === 'Space') {
-          isSpacePressed = false;
-        }
-      });
-
-      updateDialPosition();
     });
+
+    document.addEventListener('keyup', (event) => {
+        if (event.code === 'Space') {
+            isSpacePressed = false;
+        }
+    });
+
+    updateDialPosition();
+});
 
   </script>
 </body>

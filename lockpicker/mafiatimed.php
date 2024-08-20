@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mafia Timed</title>
+  <link rel="icon" href="../mlogo.png">
   <style>
     body {
       height: 100vh;

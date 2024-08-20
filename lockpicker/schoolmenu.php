@@ -17,7 +17,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="mlogo.png">
+    <link rel="icon" href="../mlogo.png">
     <title>School Menu</title>
     <style>
         body {
@@ -89,7 +89,6 @@
             <a href="schoolendless.php" class="button">ENDLESS</a>
         </div>
         <div class="bottom-buttons">
-            <a href="#" class="button">HOW TO PLAY</a>
             <a href="../lockpicking.php#leaderboard" class="button">LEADERBOARD</a>
             <a href="../lockpicking.php" class="buttonexit">EXIT</a>
         </div>

@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="../mlogo.png">
     <title>Medieval Timed</title>
     <style>
         body,

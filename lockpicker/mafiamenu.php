@@ -17,7 +17,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="mlogo.png">
+    <link rel="icon" href="../mlogo.png">
     <title>Mafia Menu</title>
     <style>
         body {

@@ -16,6 +16,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="../mlogo.png">
     <title>Medieval Endless</title>
     <style>
         body, html {
