@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/logo.png" alt="MiniGamer Logo" width="150">
+  <img src="mlogo.png" alt="MiniGamer Logo" width="150">
 </p>
 🎮 MiniGamer – Archived Web Project
 
@@ -45,5 +45,6 @@ The project was created as a technical and creative exercise in replicating well
 ❌ Project Status
 
 The website was active until 2025. It is now offline, but this repository serves as a code archive and a portfolio reference.
-![Lockpicking demo](images/lockpicking.png)
-![Hacking puzzle](images/hacking.png)
+
+
+<p align="center"> <img src="images/lockpicking.png" alt="Lockpicking preview" width="400"><br> <em>Shared lockpicking UI design</em> </p> <p align="center"> <img src="images/mafia.png" alt="Mafia lockpicking" width="400"><br> <em>Lockpicking inspired by Mafia</em> </p> <p align="center"> <img src="images/bully.png" alt="Bully lockpicking" width="400"><br> <em>Lockpicking from Bully</em> </p> <p align="center"> <img src="images/kingdomcome.png" alt="Kingdom Come lockpicking" width="400"><br> <em>Kingdom Come: Deliverance lockpicking system</em> </p> <p align="center"> <img src="images/hacking.png" alt="Hacking overview" width="400"><br> <em>Various hacking puzzles overview</em> </p> <p align="center"> <img src="images/cyberpunk.png" alt="Cyberpunk hacking" width="400"><br> <em>Hacking puzzle from Cyberpunk 2077</em> </p> <p align="center"> <img src="images/bioshock.png" alt="BioShock hacking" width="400"><br> <em>BioShock-style hacking interface</em> </p> <p align="center"> <img src="images/mayhem.png" alt="Agents of Mayhem hacking" width="400"><br> <em>Hacking system inspired by Agents of Mayhem</em> </p>
