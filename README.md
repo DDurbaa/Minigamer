@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="images/logo.png" alt="MiniGamer Logo" width="150">
+</p>
 🎮 MiniGamer – Archived Web Project
 
 MiniGamer was a browser-based school project that recreated iconic minigames from well-known video games using JavaScript and PHP. The site featured playable clones of specific gameplay mechanics, allowing users to experience them without launching full games.
@@ -30,7 +33,7 @@ MiniGamer was a browser-based school project that recreated iconic minigames fro
 
 🎯 Purpose
 
-The project was created as a technical and creative exercise in replicating well-known game mechanics using web technologies. It allowed me to explore UI interactivity, timing logic, animations, and simple backend systems.
+The project was created as a technical and creative exercise in replicating well-known game mechanics using web technologies.
 💻 Technologies Used:
 
     JavaScript, HTML, CSS
@@ -42,3 +45,5 @@ The project was created as a technical and creative exercise in replicating well
 ❌ Project Status
 
 The website was active until 2025. It is now offline, but this repository serves as a code archive and a portfolio reference.
+![Lockpicking demo](images/lockpicking.png)
+![Hacking puzzle](images/hacking.png)
